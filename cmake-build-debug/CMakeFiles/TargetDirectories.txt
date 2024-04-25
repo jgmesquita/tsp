@@ -1,0 +1,3 @@
+C:/Users/jorge/Desktop/Projeto 2 DA/cmake-build-debug/CMakeFiles/Projeto_2_DA.dir
+C:/Users/jorge/Desktop/Projeto 2 DA/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/jorge/Desktop/Projeto 2 DA/cmake-build-debug/CMakeFiles/rebuild_cache.dir
