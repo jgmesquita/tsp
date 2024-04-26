@@ -17,9 +17,13 @@ void Data::parseGraph() {
         getline(iss, orig, ',');
         getline(iss, dest, ',');
         getline(iss, dist, ',');
-        g.addVertex(orig);
-        g.addVertex(dest);
-        g.addEdge(orig, dest, stod(dist));
+        if (!g.findVertex(orig)) {
+            g.addVertex(orig);
+        }
+        if (!g.findVertex(dest)) {
+            g.addVertex(dest);
+        }
+        g.addBidirectionalEdge(orig, dest, stod(dist));
     }
 }
 

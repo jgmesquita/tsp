@@ -12,7 +12,6 @@ Graph<string> Menu::getGraphMenu() {
 }
 
 double Menu::tspBacktracking(Graph<string> g) {
-    size_t n = g.getVertexSet().size();
     for (auto v : g.getVertexSet()) {
         v->setVisited(false);
     }
