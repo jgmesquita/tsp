@@ -23,4 +23,8 @@ void Data::parseGraph() {
     }
 }
 
+Graph<string> Data::getGraph() {
+    return this->g;
+}
+
 

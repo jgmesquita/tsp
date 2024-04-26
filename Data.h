@@ -16,6 +16,7 @@ private:
     Graph<string> g;
 public:
     void parseGraph();
+    Graph<string> getGraph();
 };
 
 
