@@ -8,7 +8,7 @@
 using namespace std;
 
 void Data::parseGraph() {
-    ifstream in("../small/shipping.csv");
+    ifstream in("../small/tourism.csv");
     string line;
     getline(in, line);
     while (getline(in, line)) {

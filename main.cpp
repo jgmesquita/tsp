@@ -8,10 +8,13 @@ int main() {
     while (true) {
         cout << "Choose one of the following options!\n";
         cout << "[1] - Backtracking TSP; \n";
+        cout << "[2] - Triangular Inequality Approximation TSP; \n";
         cin >> choice;
         switch (choice) {
             case 1:
-                cout << "The result is: " << m.tspBacktracking(g) << "\n";
+                cout << "The result is: " << m.tspBacktracking(g) << "\n"; break;
+            case 2:
+                cout << "The result is: " << m.triangleApproximationTSP(g) << "\n"; break;
             default: break;
         }
     }
