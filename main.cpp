@@ -44,6 +44,7 @@ int main() {
     }
     Menu m = Menu(path);
     Graph<string> g = m.getGraphMenu();
+    unordered_map<int,pair<double,double>> c = m.getCoordinates();
     int choice;
     while (true) {
         cout << "Choose one of the following options!\n";
@@ -54,7 +55,7 @@ int main() {
             case 1:
                 cout << "The result is: " << m.tspBacktracking(g) << "\n"; break;
             case 2:
-                cout << "The result is: " << m.triangleApproximationTSP(g) << "\n"; break;
+                cout << "The result is: " << m.triangleApproximationTSP(g, c) << "\n"; break;
             default: break;
         }
     }

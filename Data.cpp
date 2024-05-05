@@ -28,7 +28,7 @@ void Data::parseGraph(string path) {
     }
 }
 
-void Data::parseEdge() {
+void Data::parseCoordinates() {
     if (this->path[1] == 'm') {
         ifstream in("../medium/nodes.csv");
         string line;

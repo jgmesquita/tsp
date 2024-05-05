@@ -19,7 +19,7 @@ private:
     unordered_map<int,pair<double,double>> coordinates;
 public:
     void parseGraph(string path);
-    void parseEdge();
+    void parseCoordinates();
     Graph<string> getGraph();
     unordered_map<int,pair<double,double>> getCoordinates();
 };
