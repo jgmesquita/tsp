@@ -7,8 +7,9 @@
 
 using namespace std;
 
-void Data::parseGraph() {
-    ifstream in("../small/tourism.csv");
+void Data::parseGraph(string path) {
+    this->path = path;
+    ifstream in(".." + path);
     string line;
     getline(in, line);
     while (getline(in, line)) {

@@ -2,9 +2,9 @@
 
 using namespace std;
 
-Menu::Menu() {
+Menu::Menu(string path) {
     this->d = Data();
-    d.parseGraph();
+    d.parseGraph(path);
 }
 
 Graph<string> Menu::getGraphMenu() {
@@ -70,16 +70,22 @@ double Menu::triangleApproximationTSP(Graph<string> g) {
         Edge<string>* nextEdge = nullptr;
         for (Edge<string>* edge : current->getAdj()) {
             Vertex<string>* candidate = edge->getDest();
-            if (!candidate->isVisited()) {
+            if (!candidate->isVisited() && visitCount != 1) {
                 bool triangleInequality = true;
                 for (const string& visitedInfo : route) {
                     Vertex<string>* visitedVertex = g.findVertex(visitedInfo);
-                    double toCurrent = findEdge(candidate, current)->getWeight();
-                    double toVisited = findEdge(candidate, visitedVertex)->getWeight();
-                    double fromVisited = findEdge(visitedVertex, current)->getWeight();
-                    if (toCurrent > toVisited + fromVisited) {
+                    auto toCurrent = findEdge(candidate, current);
+                    auto toVisited = findEdge(candidate, visitedVertex);
+                    auto fromVisited = findEdge(visitedVertex, current);
+                    if (toCurrent == nullptr || toVisited == nullptr || fromVisited == nullptr) {
                         triangleInequality = false;
-                        break;
+                        continue;
+                    }
+                    else {
+                        if (toCurrent->getWeight() > toVisited->getWeight() + fromVisited->getWeight()) {
+                            triangleInequality = false;
+                            break;
+                        }
                     }
                 }
                 if (triangleInequality && edge->getWeight() < minDist) {
@@ -88,7 +94,11 @@ double Menu::triangleApproximationTSP(Graph<string> g) {
                     minDist = edge->getWeight();
                 }
             }
-        }\
+            if (visitCount == 1) {
+                nextVertex = candidate;
+                nextEdge = findEdge(current, nextVertex);
+            }
+        }
 
         current = nextVertex;
         current->setVisited(true);

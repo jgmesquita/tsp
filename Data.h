@@ -14,8 +14,9 @@ using namespace std;
 class Data {
 private:
     Graph<string> g;
+    string path;
 public:
-    void parseGraph();
+    void parseGraph(string path);
     Graph<string> getGraph();
 };
 

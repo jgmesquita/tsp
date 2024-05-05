@@ -7,8 +7,9 @@
 class Menu {
 private:
     Data d;
+    string path;
 public:
-    Menu();
+    Menu(string path);
     Graph<string> getGraphMenu();
     double tspBacktracking(Graph<string> g);
     void tspUtil(Graph<string> g, Vertex<string>* current, vector<string> &currentRoute, double currentCost, vector<string> &bestRoute, double &minCost, int level);
