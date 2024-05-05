@@ -1,4 +1,5 @@
 #include "Menu.h"
+#include "math.h"
 
 using namespace std;
 
@@ -11,6 +12,7 @@ Graph<string> Menu::getGraphMenu() {
     return this->d.getGraph();
 }
 
+//Por alguma razão, está a ter um loop infinito no stadiums.csv! Pensar melhor!
 double Menu::tspBacktracking(Graph<string> g) {
     for (auto v : g.getVertexSet()) {
         v->setVisited(false);
@@ -54,7 +56,7 @@ void Menu::tspUtil(Graph<string> g, Vertex<string> *current, vector<string> &cur
         }
     }
 }
-//This doesn't work yet!
+//This doesn't work yet! Infinite loop or out of bounds access?
 double Menu::triangleApproximationTSP(Graph<string> g) {
     Vertex<string>* current = g.getVertexSet()[0];
     vector<string> route;
@@ -123,4 +125,17 @@ Edge<string>* Menu::findEdge(Vertex<string>* from, Vertex<string>* to) {
         }
     }
     return nullptr;
+}
+
+double Menu::haversine(double lat1, double lon1, double lat2, double lon2) {
+    double dLat = (lat2 - lat1) * M_PI / 180.0;
+    double dLon = (lon2 - lon1) * M_PI / 180.0;
+
+    double lat_a1 = lat1 * M_PI / 180.0;
+    double lat_a2 = lat2 * M_PI / 180.0;
+
+    double a = pow(sin(dLat / 2), 2) + pow(sin(dLon / 2), 2) * cos(lat_a1) * cos(lat_a2);
+    double rad = 6371;
+    double c = 2 * asin(sqrt(a));
+    return rad * c;
 }
