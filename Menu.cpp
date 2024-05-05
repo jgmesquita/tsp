@@ -12,7 +12,7 @@ Graph<string> Menu::getGraphMenu() {
     return this->d.getGraph();
 }
 
-//Por alguma razão, está a ter um loop infinito no stadiums.csv! Pensar melhor!
+//Fully working!
 double Menu::tspBacktracking(Graph<string> g) {
     for (auto v : g.getVertexSet()) {
         v->setVisited(false);
@@ -21,6 +21,7 @@ double Menu::tspBacktracking(Graph<string> g) {
     vector<string> currentRoute;
     double minCost = std::numeric_limits<double>::max();
     Vertex<string> *v = g.getVertexSet()[0];
+    v->setVisited(true);
     currentRoute.push_back(v->getInfo());
     tspUtil(g, v,currentRoute, 0, bestRoute, minCost, 1);
     for (auto it = bestRoute.begin(); it != bestRoute.end(); it++) {
