@@ -6,6 +6,7 @@ using namespace std;
 Menu::Menu(string path) {
     this->d = Data();
     d.parseGraph(path);
+    d.parseEdge();
 }
 
 Graph<string> Menu::getGraphMenu() {

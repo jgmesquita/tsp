@@ -7,6 +7,7 @@
 
 #include "Graph.h"
 #include "string"
+#include "unordered_map"
 
 using namespace std;
 
@@ -15,9 +16,12 @@ class Data {
 private:
     Graph<string> g;
     string path;
+    unordered_map<int,pair<double,double>> coordinates;
 public:
     void parseGraph(string path);
+    void parseEdge();
     Graph<string> getGraph();
+    unordered_map<int,pair<double,double>> getCoordinates();
 };
 
 
