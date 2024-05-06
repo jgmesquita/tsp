@@ -10,7 +10,7 @@ Menu::Menu(string path) {
     d.parseCoordinates();
 }
 
-Graph<string> Menu::getGraphMenu() {
+Graph<int> Menu::getGraphMenu() {
     return this->d.getGraph();
 }
 
@@ -19,14 +19,14 @@ unordered_map<int,pair<double,double>> Menu::getCoordinates() {
 }
 
 //Fully working!
-double Menu::tspBacktracking(Graph<string> g) {
+double Menu::tspBacktracking(Graph<int> g) {
     for (auto v : g.getVertexSet()) {
         v->setVisited(false);
     }
-    vector<string> bestRoute;
-    vector<string> currentRoute;
+    vector<int> bestRoute;
+    vector<int> currentRoute;
     double minCost = std::numeric_limits<double>::max();
-    Vertex<string> *v = g.getVertexSet()[0];
+    Vertex<int> *v = g.getVertexSet()[0];
     v->setVisited(true);
     currentRoute.push_back(v->getInfo());
     tspUtil(g, v,currentRoute, 0, bestRoute, minCost, 1);
@@ -36,9 +36,12 @@ double Menu::tspBacktracking(Graph<string> g) {
     return minCost;
 }
 
-void Menu::tspUtil(Graph<string> g, Vertex<string> *current, vector<string> &currentRoute, double currentCost, vector<string> &bestRoute, double &minCost, int level) {
+void Menu::tspUtil(Graph<int> g, Vertex<int> *current, vector<int> &currentRoute, double currentCost, vector<int> &bestRoute, double &minCost, int level) {
+    //when it reaches the end
+    //level is used to iterate over the right amount of nodes in the graph
+    //stadium and tourism fully connected --- shipping not fully connected
     if (level == g.getVertexSet().size()) {
-        for (Edge<string> *e : current->getAdj()) {
+        for (Edge<int> *e : current->getAdj()) {
             if (e->getDest()->getInfo() == currentRoute[0]) {
                 double totalCost = currentCost + e->getWeight();
                 if (totalCost < minCost) {
@@ -51,9 +54,9 @@ void Menu::tspUtil(Graph<string> g, Vertex<string> *current, vector<string> &cur
         }
         return;
     }
-
-    for (Edge<string> *e : current->getAdj()) {
-        Vertex<string> *next = e->getDest();
+    //basically a DFS search
+    for (Edge<int> *e : current->getAdj()) {
+        Vertex<int> *next = e->getDest();
         if (!next->isVisited()) {
             next->setVisited(true);
             currentRoute.push_back(next->getInfo());
@@ -64,29 +67,84 @@ void Menu::tspUtil(Graph<string> g, Vertex<string> *current, vector<string> &cur
     }
 }
 //This doesn't work yet! Infinite loop or out of bounds access?
-double Menu::triangleApproximationTSP(const Graph<string>& g, unordered_map<int,pair<double,double>> c) {
-    unordered_map<string, vector<pair<string, double>>> MSTadj;
-    double cost = 0;
 
-    prim(g, MSTadj);
+double Menu::triangleApproximationTSP(const Graph<int>& g, unordered_map<int,pair<double,double>> c) {
+    vector<Vertex<int> *> MST;
 
-    auto t = preOrderWalk(g, MSTadj);
-    t.push(g.getVertexSet()[0]);
+    MST = prim(g); //PRIM WORKING!!
+    vector<Vertex<int>*> preorderList = MST;
 
-    queue<Vertex<string>*> temp = t;
-    Vertex<string>* current = temp.front();
-    temp.pop();
-    Vertex<string>* next = temp.front();
-    while (!temp.empty()){
-        cost += haversine(c[stoi(current->getInfo())].second, c[stoi(current->getInfo())].first, c[stoi(next->getInfo())].second, c[stoi(next->getInfo())].first);
-        current = next;
-        temp.pop();
-        next = temp.front();
+    /*
+    for(auto v : MST){
+        if(!v->isVisited()){
+            preOrderWalk(v,preorderList);
+        }
     }
+    for(auto v : preorderList) cout << v->getInfo() << '\n';
+    */
+    unordered_set<int> visited; // To keep track of visited vertices
+    double cost = 0;
+    Vertex<int>* FirtNode = MST[0];
+    Vertex<int>* lastNode;
+    bool first = true;
+    for (const auto& node : preorderList) {
+        // If the current node has not been visited yet
+        if (visited.find(node->getInfo()) == visited.end()) {
+
+            // If lastNode is not empty, compute distance between lastNode and current node
+            if (!first) {
+                cout << lastNode->getInfo() << "-->" << node->getInfo() << '\n';
+                double distance = findEdge(lastNode,node)->getWeight();
+                //double distance = haversine(c[lastNode].second, c[lastNode].first, c[node].second, c[node].first);
+                cout << distance << '\n';
+                cost += distance;
+
+            }
+            first = false;
+            visited.insert(node->getInfo());
+            lastNode = node;
+        }
+    }
+    cout << lastNode->getInfo() << "-->" << FirtNode->getInfo() << '\n';
+    cost += findEdge(lastNode,FirtNode)->getWeight();
+
     return cost;
 }
 
-void prim(const Graph<string>& g, unordered_map<string, vector<pair<string, double>>>& MSTadj) {
+
+double Menu::Closest_Node(Graph<int> g){
+
+    for(auto v : g.getVertexSet()) v->setVisited(false);
+    double cost = 0;
+    int counter = 0;
+    Vertex<int>* Current_Node = g.getVertexSet()[0];
+    Current_Node->setVisited(true);
+    Vertex<int>* Target_node;
+    vector<Vertex<int>*> path;
+    path.push_back(Current_Node);
+    int r = g.getNumVertex();
+    while(counter < g.getNumVertex() - 1){
+        double minimum_cost_edge = std::numeric_limits<double>::max();
+        for(auto e : Current_Node->getAdj()){
+            if(!e->getDest()->isVisited()){
+                if(e->getWeight() < minimum_cost_edge){
+                    minimum_cost_edge = e->getWeight();
+                    Target_node = e->getDest();
+                }
+            }
+        }
+        cost += minimum_cost_edge;
+        Target_node->setVisited(true);
+        Current_Node = Target_node;
+        path.push_back(Target_node);
+        counter++;
+    }
+    cost += findEdge(Current_Node,g.getVertexSet()[0])->getWeight();
+    return cost;
+}
+
+vector<Vertex<int> *> Menu::prim(const Graph<int>& g) {
+    vector<Vertex<int> *> result;
     if (g.getVertexSet().empty()) {
         cerr << "Graph is empty! Abort program!";
     }
@@ -95,56 +153,48 @@ void prim(const Graph<string>& g, unordered_map<string, vector<pair<string, doub
         v->setPath(nullptr);
         v->setVisited(false);
     }
-    Vertex<string> *s = g.getVertexSet().front();
-    s->setDist(0);
-    MutablePriorityQueue<Vertex<string>> q;
-    q.insert(s);
+
+    MutablePriorityQueue<Vertex<int>> q;
+    for(auto v : g.getVertexSet()){
+        q.insert(v);
+    }
+    g.getVertexSet()[0]->setDist(0);
+
     while (!q.empty()) {
         auto v = q.extractMin();
         v->setVisited(true);
-        if (v->getPath() != nullptr) {
-            Vertex<string> *w = v->getPath()->getOrig();
-            MSTadj[w->getInfo()].push_back(make_pair(v->getInfo(), v->getPath()->getWeight()));
-            MSTadj[v->getInfo()].push_back(make_pair(w->getInfo(), v->getPath()->getWeight()));
-            for (auto &e: v->getAdj()) {
-                Vertex<string> *w = e->getDest();
-                if (!w->isVisited()) {
-                    auto oldDist = w->getDist();
-                    if (e->getWeight() < oldDist) {
-                        w->setDist(e->getWeight());
-                        w->setPath(e);
-                        if (oldDist == INF) {
-                            q.insert(w);
-                        } else {
-                            q.decreaseKey(w);
-                        }
-                    }
+        result.push_back(v);
+        for(auto e : v->getAdj()){
+            auto dest = e->getDest();
+            if(!dest->isVisited()){
+
+                if(e->getWeight() < dest->getDist()){
+                    dest->setDist(e->getWeight());
+                    dest->setPath(e); //ligar o vertice dest aglomerado principal via este edge
+
+                    q.decreaseKey(dest); //updates the position of dest in the priority queue
                 }
             }
         }
     }
+
+    return result;
 }
 
-queue<Vertex<string>*> Menu::preOrderWalk(const Graph<std::string>& g, unordered_map<std::string, vector<pair<std::string, double>>> &MSTadj) {
-    queue<Vertex<string>*> q;
-    for (auto v : g.getVertexSet()) {
-        v->setVisited(false);
-    }
-    Vertex<string>* start = g.getVertexSet()[0];
-    preOrder(g, start,q, MSTadj);
-    return q;
-}
-
-void preOrder(const Graph<string>& g, Vertex<string>* v, queue<Vertex<string>*> &q, unordered_map<string, vector<pair<string, double>>>& MSTadj) {
-    q.push(v);
+void Menu::preOrderWalk(Vertex<int>* v, vector<Vertex<int>*>& L) {
+    if(v == nullptr) return;
+    L.push_back(v);
     v->setVisited(true);
-    for (auto p : MSTadj[v->getInfo()]) {
-        Vertex<string>* w = g.findVertex(p.first);
-        if (!w->isVisited()) {
-            preOrder(g, w, q, MSTadj);
+    // Recursively visit the left subtree
+    for (auto edge : v->getAdj()) {
+        auto dest = edge->getDest();
+        if (!dest->isVisited()) {
+            preOrderWalk(dest, L);
         }
     }
 }
+
+
 
 double Menu::haversine(double lat1, double lon1, double lat2, double lon2) {
     double dLat = (lat2 - lat1) * M_PI / 180.0;
@@ -161,9 +211,8 @@ double Menu::haversine(double lat1, double lon1, double lat2, double lon2) {
     }
     return rad * c;
 }
-
-Edge<string>* Menu::findEdge(Vertex<string>* from, Vertex<string>* to) {
-    for (Edge<string>* edge : from->getAdj()) {
+Edge<int>* Menu::findEdge(Vertex<int>* from, Vertex<int>* to) {
+    for (Edge<int>* edge : from->getAdj()) {
         if (edge->getDest() == to) {
             return edge;
         }

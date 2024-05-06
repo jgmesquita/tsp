@@ -17,14 +17,14 @@ void Data::parseGraph(string path) {
         istringstream iss(line);
         getline(iss, orig, ',');
         getline(iss, dest, ',');
-        getline(iss, dist, ',');
-        if (!g.findVertex(orig)) {
-            g.addVertex(orig);
+        getline(iss, dist);
+        if (!g.findVertex(stoi(orig))) {
+            g.addVertex(stoi(orig));
         }
-        if (!g.findVertex(dest)) {
-            g.addVertex(dest);
+        if (!g.findVertex(stoi(dest))) {
+            g.addVertex(stoi(dest));
         }
-        g.addBidirectionalEdge(orig, dest, stod(dist));
+        g.addBidirectionalEdge(stoi(orig), stoi(dest), stod(dist));
     }
 }
 
@@ -38,7 +38,7 @@ void Data::parseCoordinates() {
             istringstream iss(line);
             getline(iss, id, ',');
             getline(iss, lon, ',');
-            getline(iss, lat, ',');
+            getline(iss, lat);
             coordinates[stoi(id)] = make_pair(stod(lon), stod(lat));
         }
     }
@@ -63,7 +63,7 @@ void Data::parseCoordinates() {
     }
 }
 
-Graph<string> Data::getGraph() {
+Graph<int> Data::getGraph() {
     return this->g;
 }
 

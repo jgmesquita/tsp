@@ -14,13 +14,13 @@ using namespace std;
 
 class Data {
 private:
-    Graph<string> g;
+    Graph<int> g;
     string path;
     unordered_map<int,pair<double,double>> coordinates;
 public:
     void parseGraph(string path);
     void parseCoordinates();
-    Graph<string> getGraph();
+    Graph<int> getGraph();
     unordered_map<int,pair<double,double>> getCoordinates();
 };
 

@@ -4,6 +4,7 @@
 #include "Data.h"
 #include "vector"
 #include "queue"
+#include "unordered_set"
 
 class Menu {
 private:
@@ -11,16 +12,16 @@ private:
     string path;
 public:
     Menu(string path);
-    Graph<string> getGraphMenu();
+    Graph<int> getGraphMenu();
     unordered_map<int,pair<double,double>> getCoordinates();
-    double tspBacktracking(Graph<string> g);
-    void tspUtil(Graph<string> g, Vertex<string>* current, vector<string> &currentRoute, double currentCost, vector<string> &bestRoute, double &minCost, int level);
-    double triangleApproximationTSP(const Graph<string>& g, unordered_map<int,pair<double,double>> c);
+    double tspBacktracking(Graph<int> g);
+    void tspUtil(Graph<int> g, Vertex<int>* current, vector<int> &currentRoute, double currentCost, vector<int> &bestRoute, double &minCost, int level);
+    double triangleApproximationTSP(const Graph<int>& g, unordered_map<int,pair<double,double>> c);
     double haversine(double lat1, double lon1, double lat2, double lon2);
-    void prim(const Graph<string>& g, unordered_map<string, vector<pair<string, double>>>& MSTadj);
-    queue<Vertex<string>*> preOrderWalk(const Graph<string>& g, unordered_map<string, vector<pair<string, double>>>& MSTadj);
-    void preOrder(const Graph<string>& g, Vertex<string>* v, queue<Vertex<string>*> &q, unordered_map<string, vector<pair<string, double>>>& MSTadj);
-    Edge<string>* findEdge(Vertex<string>* from, Vertex<string>* to);
+    vector<Vertex<int> *> prim(const Graph<int>& g);
+    void preOrderWalk(Vertex<int>* v, vector<Vertex<int>*>& L);
+    Edge<int>* findEdge(Vertex<int>* from, Vertex<int>* to);
+    double Closest_Node(Graph<int> g);
 };
 
 #endif //PROJETO_2_DA_MENU_H

@@ -1,5 +1,8 @@
 #include <iostream>
 #include "Menu.h"
+#include "chrono"
+
+using namespace std;
 
 int main() {
     string path;
@@ -43,19 +46,46 @@ int main() {
 
     }
     Menu m = Menu(path);
-    Graph<string> g = m.getGraphMenu();
+    Graph<int> g = m.getGraphMenu();
     unordered_map<int,pair<double,double>> c = m.getCoordinates();
     int choice;
     while (true) {
         cout << "Choose one of the following options!\n";
         cout << "[1] - Backtracking TSP; \n";
         cout << "[2] - Triangular Inequality Approximation TSP; \n";
+        cout << "[3] - Nearest Neighbour TSP; \n";
         cin >> choice;
         switch (choice) {
-            case 1:
-                cout << "The result is: " << m.tspBacktracking(g) << "\n"; break;
-            case 2:
-                cout << "The result is: " << m.triangleApproximationTSP(g, c) << "\n"; break;
+            case 1: {
+                chrono::steady_clock::time_point start = chrono::steady_clock::now();
+                cout << "The result is: " << m.tspBacktracking(g) << "\n";
+                chrono::steady_clock::time_point end = chrono::steady_clock::now();
+                chrono::duration<double, std::milli> duration = chrono::duration_cast<chrono::duration<double, std::milli>>(
+                        end - start);
+                double time = duration.count();
+                cout << "The duration is: " << time << "ms" << "\n";
+                break;
+            }
+            case 2: {
+                chrono::steady_clock::time_point start = chrono::steady_clock::now();
+                cout << "The result is: " << m.triangleApproximationTSP(g, c) << "\n";
+                chrono::steady_clock::time_point end = chrono::steady_clock::now();
+                chrono::duration<double, std::milli> duration = chrono::duration_cast<chrono::duration<double, std::milli>>(
+                        end - start);
+                double time = duration.count();
+                cout << "The duration is: " << time << "ms" << "\n";
+                break;
+            }
+            case 3: {
+                chrono::steady_clock::time_point start = chrono::steady_clock::now();
+                cout << "The result is: " << m.Closest_Node(g) << "\n";
+                chrono::steady_clock::time_point end = chrono::steady_clock::now();
+                chrono::duration<double, std::milli> duration = chrono::duration_cast<chrono::duration<double, std::milli>>(
+                        end - start);
+                double time = duration.count();
+                cout << "The duration is: " << time << "ms" << "\n";
+                break;
+            }
             default: break;
         }
     }
