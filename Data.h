@@ -21,7 +21,9 @@ public:
     void parseGraph(string path);
     void parseCoordinates();
     Graph<int> getGraph();
+    vector<vector<int>> getGraphMatrix();
     unordered_map<int,pair<double,double>> getCoordinates();
+    string getPath();
 };
 
 

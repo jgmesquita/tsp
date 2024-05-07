@@ -18,6 +18,7 @@ unordered_map<int,pair<double,double>> Menu::getCoordinates() {
     return this->d.getCoordinates();
 }
 
+
 //Fully working!
 double Menu::tspBacktracking(Graph<int> g) {
     for (auto v : g.getVertexSet()) {
@@ -66,7 +67,6 @@ void Menu::tspUtil(Graph<int> g, Vertex<int> *current, vector<int> &currentRoute
         }
     }
 }
-//This doesn't work yet! Infinite loop or out of bounds access?
 
 double Menu::triangleApproximationTSP(const Graph<int>& g, unordered_map<int,pair<double,double>> c) {
     vector<Vertex<int> *> MST;
@@ -74,14 +74,6 @@ double Menu::triangleApproximationTSP(const Graph<int>& g, unordered_map<int,pai
     MST = prim(g); //PRIM WORKING!!
     vector<Vertex<int>*> preorderList = MST;
 
-    /*
-    for(auto v : MST){
-        if(!v->isVisited()){
-            preOrderWalk(v,preorderList);
-        }
-    }
-    for(auto v : preorderList) cout << v->getInfo() << '\n';
-    */
     unordered_set<int> visited; // To keep track of visited vertices
     double cost = 0;
     Vertex<int>* FirtNode = MST[0];
@@ -112,8 +104,21 @@ double Menu::triangleApproximationTSP(const Graph<int>& g, unordered_map<int,pai
 }
 
 
-double Menu::Closest_Node(Graph<int> g){
 
+
+double Menu::christofides_tsp(Graph<int> g, unordered_map<int,pair<double,double>> c){
+    vector<Vertex<int> *> MST;
+    MST = prim(g);
+    vector<Vertex<int>*> odd_vertices;
+
+    for(auto v: MST){
+        if(v->getIncoming().size() + v->getAdj().size() % 2 != 0) odd_vertices.push_back(v);
+    }
+
+}
+
+
+double Menu::Closest_Node(Graph<int> g, unordered_map<int,pair<double,double>> c){
     for(auto v : g.getVertexSet()) v->setVisited(false);
     double cost = 0;
     int counter = 0;
@@ -122,7 +127,7 @@ double Menu::Closest_Node(Graph<int> g){
     Vertex<int>* Target_node;
     vector<Vertex<int>*> path;
     path.push_back(Current_Node);
-    int r = g.getNumVertex();
+
     while(counter < g.getNumVertex() - 1){
         double minimum_cost_edge = std::numeric_limits<double>::max();
         for(auto e : Current_Node->getAdj()){
@@ -181,21 +186,6 @@ vector<Vertex<int> *> Menu::prim(const Graph<int>& g) {
     return result;
 }
 
-void Menu::preOrderWalk(Vertex<int>* v, vector<Vertex<int>*>& L) {
-    if(v == nullptr) return;
-    L.push_back(v);
-    v->setVisited(true);
-    // Recursively visit the left subtree
-    for (auto edge : v->getAdj()) {
-        auto dest = edge->getDest();
-        if (!dest->isVisited()) {
-            preOrderWalk(dest, L);
-        }
-    }
-}
-
-
-
 double Menu::haversine(double lat1, double lon1, double lat2, double lon2) {
     double dLat = (lat2 - lat1) * M_PI / 180.0;
     double dLon = (lon2 - lon1) * M_PI / 180.0;
@@ -213,7 +203,7 @@ double Menu::haversine(double lat1, double lon1, double lat2, double lon2) {
 }
 Edge<int>* Menu::findEdge(Vertex<int>* from, Vertex<int>* to) {
     for (Edge<int>* edge : from->getAdj()) {
-        if (edge->getDest() == to) {
+        if (edge->getDest()->getInfo() == to->getInfo()) {
             return edge;
         }
     }

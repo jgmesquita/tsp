@@ -12,19 +12,38 @@ void Data::parseGraph(string path) {
     ifstream in(".." + path);
     string line;
     getline(in, line);
-    while (getline(in, line)) {
-        string orig, dest, dist;
-        istringstream iss(line);
-        getline(iss, orig, ',');
-        getline(iss, dest, ',');
-        getline(iss, dist);
-        if (!g.findVertex(stoi(orig))) {
-            g.addVertex(stoi(orig));
+    if (this->path[1] == 'm' || this->path[1] == 's') {
+        while (getline(in, line)) {
+            string orig, dest, dist;
+            istringstream iss(line);
+            getline(iss, orig, ',');
+            getline(iss, dest, ',');
+            getline(iss, dist);
+            if (!g.findVertex(stoi(orig))) {
+                g.addVertex(stoi(orig));
+            }
+            if (!g.findVertex(stoi(dest))) {
+                g.addVertex(stoi(dest));
+            }
+            g.addBidirectionalEdge(stoi(orig), stoi(dest), stod(dist));
         }
-        if (!g.findVertex(stoi(dest))) {
-            g.addVertex(stoi(dest));
+    } else{
+        vector<int> row;
+        int curent = 0;
+        g.addVertex(0);
+        while (getline(in, line)) {
+            string orig, dest, dist;
+            istringstream iss(line);
+            getline(iss, orig, ',');
+            getline(iss, dest, ',');
+            getline(iss, dist);
+            row[]
+            if(stoi(orig) != curent){
+                g.addVertex(stoi(orig));
+                curent = stoi(orig);
+                g.matrix.push_back(row);
+            }
         }
-        g.addBidirectionalEdge(stoi(orig), stoi(dest), stod(dist));
     }
 }
 
@@ -42,22 +61,23 @@ void Data::parseCoordinates() {
             coordinates[stoi(id)] = make_pair(stod(lon), stod(lat));
         }
     }
-    else if (this->path[2] == 'l') {
+    else if (this->path[1] == 'l') {
         string subpath;
-        switch (this->path[11]) {
+        switch (this->path[12]) {
             case '1': subpath = "../large/graph1/nodes.csv"; break;
             case '2': subpath = "../large/graph2/nodes.csv"; break;
-            case '3': subpath = "../large/graph1/nodes.csv"; break;
+            case '3': subpath = "../large/graph3/nodes.csv"; break;
         }
-        ifstream in(path);
+        ifstream in(subpath);
         string line;
         getline(in, line);
+
         while (getline(in, line)) {
             string id, lon, lat;
             istringstream iss(line);
             getline(iss, id, ',');
             getline(iss, lon, ',');
-            getline(iss, lat, ',');
+            getline(iss, lat);
             coordinates[stoi(id)] = make_pair(stod(lon), stod(lat));
         }
     }
@@ -71,4 +91,7 @@ unordered_map<int,pair<double,double>> Data::getCoordinates() {
     return this->coordinates;
 }
 
+string Data::getPath() {
+    return this->path;
+}
 
