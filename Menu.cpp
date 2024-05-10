@@ -31,9 +31,11 @@ double Menu::tspBacktracking(Graph<int> g) {
     v->setVisited(true);
     currentRoute.push_back(v->getInfo());
     tspUtil(g, v,currentRoute, 0, bestRoute, minCost, 1);
+    cout << "The path is: ";
     for (auto it = bestRoute.begin(); it != bestRoute.end(); it++) {
-        cout << *it << endl;
+        cout << *it << " ";
     }
+    cout << "\n";
     return minCost;
 }
 
@@ -82,24 +84,27 @@ double Menu::triangleApproximationTSP(const Graph<int>& g, unordered_map<int,pai
     for (const auto& node : preorderList) {
         // If the current node has not been visited yet
         if (visited.find(node->getInfo()) == visited.end()) {
-
             // If lastNode is not empty, compute distance between lastNode and current node
             if (!first) {
-                cout << lastNode->getInfo() << "-->" << node->getInfo() << '\n';
                 double distance = findEdge(lastNode,node)->getWeight();
                 //double distance = haversine(c[lastNode].second, c[lastNode].first, c[node].second, c[node].first);
-                cout << distance << '\n';
                 cost += distance;
-
             }
             first = false;
             visited.insert(node->getInfo());
             lastNode = node;
         }
     }
-    cout << lastNode->getInfo() << "-->" << FirtNode->getInfo() << '\n';
+    cout << "The path is: ";
+    vector<int> temp;
+    for (auto it = visited.begin(); it != visited.end(); it++) {
+        temp.push_back(*it);
+    }
+    for (auto it = (int)temp.size() - 1; it >= 0; it--) {
+        cout << temp[it] << " ";
+    }
+    cout << "0\n";
     cost += findEdge(lastNode,FirtNode)->getWeight();
-
     return cost;
 }
 
@@ -138,13 +143,72 @@ double Menu::Closest_Node(Graph<int> g, unordered_map<int,pair<double,double>> c
                 }
             }
         }
+        if (minimum_cost_edge == numeric_limits<double>::max()) {
+            cout << "It wasn't possible to find a path!\n";
+            return -1;
+        }
         cost += minimum_cost_edge;
         Target_node->setVisited(true);
         Current_Node = Target_node;
         path.push_back(Target_node);
         counter++;
     }
-    cost += findEdge(Current_Node,g.getVertexSet()[0])->getWeight();
+    auto return_edge = findEdge(Current_Node,g.getVertexSet()[0]);
+    if (return_edge == nullptr) {
+        cout << "It wasn't possible to find a return edge to the origin!\n";
+        return -1;
+    }
+    cost += return_edge->getWeight();
+    cout << "The path is: ";
+    for (auto p : path) {
+        cout << p->getInfo() << " ";
+    }
+    cout << "\n";
+    cost += return_edge->getWeight();
+    return cost;
+}
+
+double Menu::Closest_Node_Origin(Graph<int> g, unordered_map<int,pair<double,double>> c, int origin){
+    for(auto v : g.getVertexSet()) v->setVisited(false);
+    double cost = 0;
+    int counter = 0;
+    Vertex<int>* Current_Node = g.findVertex(origin);
+    Current_Node->setVisited(true);
+    Vertex<int>* Target_node;
+    vector<Vertex<int>*> path;
+    path.push_back(Current_Node);
+    while(counter < g.getNumVertex() - 1){
+        double minimum_cost_edge = std::numeric_limits<double>::max();
+        for(auto e : Current_Node->getAdj()){
+            if(!e->getDest()->isVisited()){
+                if(e->getWeight() < minimum_cost_edge){
+                    minimum_cost_edge = e->getWeight();
+                    Target_node = e->getDest();
+                }
+            }
+        }
+        if (minimum_cost_edge == numeric_limits<double>::max()) {
+            cout << "It wasn't possible to find a path!\n";
+            return -1;
+        }
+        cost += minimum_cost_edge;
+        Target_node->setVisited(true);
+        Current_Node = Target_node;
+        path.push_back(Target_node);
+        counter++;
+    }
+    auto return_edge = findEdge(Current_Node,g.findVertex(origin));
+    if (return_edge == nullptr) {
+        cout << "It wasn't possible to find a return edge to the origin!\n";
+        return -1;
+    }
+    cost += return_edge->getWeight();
+    cout << "The path is: ";
+    for (auto p : path) {
+        cout << p->getInfo() << " ";
+    }
+
+    cout << origin << "\n";
     return cost;
 }
 

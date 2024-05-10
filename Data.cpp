@@ -12,7 +12,7 @@ void Data::parseGraph(string path) {
     ifstream in(".." + path);
     string line;
     getline(in, line);
-    if (this->path[1] == 'm' || this->path[1] == 's') {
+    if (this->path[1] == 'm' || this->path[1] == 's' || true) {
         while (getline(in, line)) {
             string orig, dest, dist;
             istringstream iss(line);
@@ -27,7 +27,7 @@ void Data::parseGraph(string path) {
             }
             g.addBidirectionalEdge(stoi(orig), stoi(dest), stod(dist));
         }
-    } else{
+    } /*else{
         vector<int> row;
         int curent = 0;
         g.addVertex(0);
@@ -43,9 +43,9 @@ void Data::parseGraph(string path) {
                 curent = stoi(orig);
                 g.matrix.push_back(row);
             }
-        }
-    }
+        }*/
 }
+
 
 void Data::parseCoordinates() {
     if (this->path[1] == 'm') {

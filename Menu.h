@@ -22,6 +22,7 @@ public:
     vector<Vertex<int> *> prim(const Graph<int>& g);
     Edge<int>* findEdge(Vertex<int>* from, Vertex<int>* to);
     double Closest_Node(Graph<int> g, unordered_map<int,pair<double,double>> c);
+    double Closest_Node_Origin(Graph<int> g, unordered_map<int,pair<double,double>> c, int origin);
 };
 
 #endif //PROJETO_2_DA_MENU_H
