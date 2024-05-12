@@ -10,6 +10,9 @@
 #include <limits>
 #include <algorithm>
 #include "MutablePriorityQueue.h"
+#include "set"
+#include "unordered_map"
+#include "map"
 
 template <class T>
 class Edge;
@@ -29,7 +32,6 @@ class Vertex {
 public:
     Vertex(T in);
     bool operator<(Vertex<T> & vertex) const; // // required by MutablePriorityQueue
-
     T getInfo() const;
     std::vector<Edge<T> *> getAdj() const;
     bool isVisited() const;
@@ -150,6 +152,7 @@ public:
     bool dfsIsDAG(Vertex<T> *v) const;
     std::vector<T> topsort() const;
     std::vector<std::vector<int>> matrix;
+    std::map<int, Vertex<T>*> vertex_map;
 
 protected:
     std::vector<Vertex<T> *> vertexSet;    // vertex set

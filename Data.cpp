@@ -11,42 +11,52 @@ void Data::parseGraph(string path) {
     this->path = path;
     ifstream in(".." + path);
     string line;
-    getline(in, line);
-    if (this->path[1] == 'm' || this->path[1] == 's' || true) {
-        while (getline(in, line)) {
-            string orig, dest, dist;
-            istringstream iss(line);
-            getline(iss, orig, ',');
-            getline(iss, dest, ',');
-            getline(iss, dist);
-            if (!g.findVertex(stoi(orig))) {
-                g.addVertex(stoi(orig));
-            }
-            if (!g.findVertex(stoi(dest))) {
-                g.addVertex(stoi(dest));
-            }
-            g.addBidirectionalEdge(stoi(orig), stoi(dest), stod(dist));
+    if (path[1] != 'm') {
+        getline(in, line);
+    }
+    while (getline(in, line)) {
+        string orig, dest, dist;
+        istringstream iss(line);
+        getline(iss, orig, ',');
+        getline(iss, dest, ',');
+        getline(iss, dist);
+        if (!g.findVertex(stoi(orig))) {
+            g.addVertex(stoi(orig));
         }
-    } /*else{
-        vector<int> row;
-        int curent = 0;
-        g.addVertex(0);
-        while (getline(in, line)) {
-            string orig, dest, dist;
-            istringstream iss(line);
-            getline(iss, orig, ',');
-            getline(iss, dest, ',');
-            getline(iss, dist);
-            row[]
-            if(stoi(orig) != curent){
-                g.addVertex(stoi(orig));
-                curent = stoi(orig);
-                g.matrix.push_back(row);
-            }
-        }*/
+        if (!g.findVertex(stoi(dest))) {
+            g.addVertex(stoi(dest));
+        }
+        g.addBidirectionalEdge(stoi(orig), stoi(dest), stod(dist));
+    }
 }
 
+void Data::parseGraph(string path, int size) {
+    set<int> temp;
+    this->path = path;
+    ifstream in(".." + path);
+    string line;
+    if (path[1] != 'm') {
+        getline(in, line);
+    }
+    vector<vector<int>> matrix(size, vector<int>(size, 0));
+    map<int,Vertex<int>*> vertexset;
+    for (int i = 0; i < size; i++) {
+        Vertex<int>* v = new Vertex(i);
+        vertexset[i] = v;
+    }
+    g.vertex_map = vertexset;
+    while (getline(in, line)) {
+        string orig, dest, dist;
+        istringstream iss(line);
+        getline(iss, orig, ',');
+        getline(iss, dest, ',');
+        getline(iss, dist);
+        matrix[stoi(orig)][stoi(dest)] = stoi(dist);
+        matrix[stoi(dest)][stoi(orig)] = stoi(dist);
+    }
+    g.matrix = matrix;
 
+}
 void Data::parseCoordinates() {
     if (this->path[1] == 'm') {
         ifstream in("../medium/nodes.csv");

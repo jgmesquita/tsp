@@ -8,9 +8,9 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "C:/Users/jorge/Desktop/DA 2/Data.cpp" "CMakeFiles/Projeto_2_DA.dir/Data.cpp.obj" "gcc" "CMakeFiles/Projeto_2_DA.dir/Data.cpp.obj.d"
-  "C:/Users/jorge/Desktop/DA 2/Menu.cpp" "CMakeFiles/Projeto_2_DA.dir/Menu.cpp.obj" "gcc" "CMakeFiles/Projeto_2_DA.dir/Menu.cpp.obj.d"
-  "C:/Users/jorge/Desktop/DA 2/main.cpp" "CMakeFiles/Projeto_2_DA.dir/main.cpp.obj" "gcc" "CMakeFiles/Projeto_2_DA.dir/main.cpp.obj.d"
+  "C:/Users/afdom/OneDrive/Ambiente de Trabalho/DA/Project/tsp/Data.cpp" "CMakeFiles/Projeto_2_DA.dir/Data.cpp.obj" "gcc" "CMakeFiles/Projeto_2_DA.dir/Data.cpp.obj.d"
+  "C:/Users/afdom/OneDrive/Ambiente de Trabalho/DA/Project/tsp/Menu.cpp" "CMakeFiles/Projeto_2_DA.dir/Menu.cpp.obj" "gcc" "CMakeFiles/Projeto_2_DA.dir/Menu.cpp.obj.d"
+  "C:/Users/afdom/OneDrive/Ambiente de Trabalho/DA/Project/tsp/main.cpp" "CMakeFiles/Projeto_2_DA.dir/main.cpp.obj" "gcc" "CMakeFiles/Projeto_2_DA.dir/main.cpp.obj.d"
   )
 
 # Targets to which this target links which contain Fortran sources.

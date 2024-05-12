@@ -1,36 +1,39 @@
 #include <iostream>
 #include "Menu.h"
 #include "chrono"
+#include "stack"
+
 
 using namespace std;
 
 int main() {
     string path;
     string subpath;
-    int size;
+    int boot_main;
     int boot;
+    int size;
     cout << "Select the group of graphs you want to use:\n";
     cout << "[1] - Small;\n";
     cout << "[2] - Medium;\n";
     cout << "[3] - Large;\n";
-    cin >> boot;
-    switch (boot) {
+    cin >> boot_main;
+    switch (boot_main) {
         case 1: cout << "Select the graph:\n";
                 cout << "[1] - Shipping;\n";
                 cout << "[2] - Stadiums;\n";
                 cout << "[3] - Tourism;\n";
                 cin >> boot;
                 switch (boot) {
-                    case 1: path = "/small/shipping.csv";  break;
-                    case 2: path = "/small/stadiums.csv";  break;
-                    case 3: path = "/small/tourism.csv";  break;
+                    case 1: path = "/small/shipping.csv"; size = 14; break;
+                    case 2: path = "/small/stadiums.csv";  size = 11; break;
+                    case 3: path = "/small/tourism.csv";  size = 5; break;
                     default: cerr << "Invalid input! Abort program!"; break;
                 }
                 break;
         case 2: cout << "Write the number of nodes: [25,50,75,100,200,300,400,500,600,700,800,900]!\n";
                 cin >> subpath;
-                size = stoi(subpath);
                 path = "/medium/edges_" + subpath + ".csv";
+                size = stoi(subpath);
                 break;
         case 3: cout << "Select the graph:\n";
                 cout << "[1] - Graph 1;\n";
@@ -38,16 +41,26 @@ int main() {
                 cout << "[3] - Graph 3;\n";
                 cin >> boot;
                 switch (boot) {
-                    case 1: path = "/large/graph1/edges.csv";  break;
-                    case 2: path = "/large/graph2/edges.csv";  break;
-                    case 3: path = "/large/graph3/edges.csv";  break;
+                    case 1: path = "/large/graph1/edges.csv"; size = 1000; break;
+                    case 2: path = "/large/graph2/edges.csv"; size = 5000; break;
+                    case 3: path = "/large/graph3/edges.csv"; size = 10000; break;
                     default: cerr << "Invalid input! Abort program!"; break;
                 }
                 break;
         default: cerr << "Invalid input! Abort program!"; break;
 
     }
-    Menu m = Menu(path);
+    Menu m;
+
+    chrono::steady_clock::time_point start = chrono::steady_clock::now();
+    m = Menu(path,size);
+    chrono::steady_clock::time_point end = chrono::steady_clock::now();
+    chrono::duration<double, std::milli> duration = chrono::duration_cast<chrono::duration<double, std::milli>>(
+            end - start);
+    double time = duration.count();
+    cout << "The duration is: " << time << "ms" << "\n";
+
+
     unordered_map<int,pair<double,double>> c = m.getCoordinates();
     Graph<int> g = m.getGraphMenu();
     int choice;
@@ -57,7 +70,6 @@ int main() {
         cout << "[1] - Backtracking TSP; \n";
         cout << "[2] - Triangular Inequality Approximation TSP; \n";
         cout << "[3] - Nearest Neighbour TSP; \n";
-        cout << "[4] - Nearest Neighbour TSP (Select Origin!); \n";
         cin >> choice;
         cout << "\n";
         switch (choice) {
@@ -84,30 +96,15 @@ int main() {
                 break;
             }
             case 3: {
-                chrono::steady_clock::time_point start = chrono::steady_clock::now();
-                double cost = m.Closest_Node(g, c);
-                cout << "The cost is: " << cost << "\n";
-                chrono::steady_clock::time_point end = chrono::steady_clock::now();
-                chrono::duration<double, std::milli> duration = chrono::duration_cast<chrono::duration<double, std::milli>>(
-                        end - start);
-                double time = duration.count();
-                cout << "The duration is: " << time << "ms" << "\n";
-                break;
-            }
-            case 4: {
-                int origin;
-                cout << "Write the number of the origin node!\n";
-                cin >> origin;
-                chrono::steady_clock::time_point start = chrono::steady_clock::now();
-                double cost = m.Closest_Node_Origin(g, c, origin);
-                cout << "The cost is: " << cost << "\n";
-                chrono::steady_clock::time_point end = chrono::steady_clock::now();
-                chrono::duration<double, std::milli> duration = chrono::duration_cast<chrono::duration<double, std::milli>>(
-                        end - start);
-                double time = duration.count();
-                cout << "The duration is: " << time << "ms" << "\n";
-                break;
-
+                    chrono::steady_clock::time_point start = chrono::steady_clock::now();
+                    double cost = m.Closest_Node_Origin(g, c);
+                    cout << "The cost is: " << cost << "\n";
+                    chrono::steady_clock::time_point end = chrono::steady_clock::now();
+                    chrono::duration<double, std::milli> duration = chrono::duration_cast<chrono::duration<double, std::milli>>(
+                            end - start);
+                    double time = duration.count();
+                    cout << "The duration is: " << time << "ms" << "\n";
+                    break;
             }
             default: break;
         }

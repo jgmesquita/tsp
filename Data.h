@@ -8,6 +8,8 @@
 #include "Graph.h"
 #include "string"
 #include "unordered_map"
+#include "map"
+#include "set"
 
 using namespace std;
 
@@ -19,6 +21,7 @@ private:
     unordered_map<int,pair<double,double>> coordinates;
 public:
     void parseGraph(string path);
+    void parseGraph(string path, int size);
     void parseCoordinates();
     Graph<int> getGraph();
     vector<vector<int>> getGraphMatrix();
