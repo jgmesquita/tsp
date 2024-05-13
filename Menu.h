@@ -25,11 +25,13 @@ public:
     double christofides_tsp(Graph<int> g, unordered_map<int,pair<double,double>> c);
     void minimumWeightPerfectMatching(vector<Vertex<int>*>& odd_vertices);
     vector<Vertex<int>*> eulerianCircuit(const vector<Edge<int>*>& H);
-    void heirholzer(Vertex<int>* v, vector<Vertex<int>*> &Ecircuit,unordered_map<Vertex<int>*, vector<Edge<int>*>> adjList);
+    void heirholzer(Vertex<int>* v, vector<Vertex<int>*> &Ecircuit,unordered_map<Vertex<int>*);
     vector<Vertex<int>*> ConvertToHamiltonianCircuit(vector<Vertex<int>*>& ECircuit);
     double CalculateTotalCost(vector<Vertex<int>*> hamiltonianCircuit,unordered_map<int,pair<double,double>> c);
     double haversine(double lat1, double lon1, double lat2, double lon2);
-    vector<Vertex<int> *> prim(Graph<int>& g, unordered_map<int,pair<double,double>> c);
+    void prim(Graph<int>& g);
+    vector<Vertex<int>*> preOrderWalk(map<int,Vertex<int>*> MST);
+    void PreOrderWalkDFS(Vertex<int>* node, vector<Vertex<int>*>& result);
     void prim2(Graph<int>& g);
     Edge<int>* findEdge(Vertex<int>* from, Vertex<int>* to);
     double Closest_Node_Origin(Graph<int> g, unordered_map<int,pair<double,double>> c);

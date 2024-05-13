@@ -48,22 +48,17 @@ double Menu::tspBacktracking(Graph<int> g) {
     v->setVisited(true);
     currentRoute.push_back(v->getInfo());
     tspUtil(g, v,currentRoute, 0, bestRoute, minCost, 1);
-    cout << "The path is: ";
     for (auto it = bestRoute.begin(); it != bestRoute.end(); it++) {
-        cout << *it << " ";
+        cout << *it << endl;
     }
-    cout << "\n";
     return minCost;
 }
 
 void Menu::tspUtil(Graph<int> g, Vertex<int> *current, vector<int> &currentRoute, double currentCost, vector<int> &bestRoute, double &minCost, int level) {
-    //when it reaches the end
-    //level is used to iterate over the right amount of nodes in the graph
-    //stadium and tourism fully connected --- shipping not fully connected
     if (level == g.vertex_map.size()) {
-        for (int i = 0; i < g.matrix[current->getInfo()].size(); i++) {
-            if (g.matrix[current->getInfo()][i] != 0 && g.vertex_map[i]->getInfo() == currentRoute[0]) {
-                double totalCost = currentCost + g.matrix[current->getInfo()][i];
+        for (Edge<int> *e : current->getAdj()) {
+            if (e->getDest()->getInfo() == currentRoute[0]) {
+                double totalCost = currentCost + e->getWeight();
                 if (totalCost < minCost) {
                     minCost = totalCost;
                     bestRoute = currentRoute;
@@ -74,60 +69,120 @@ void Menu::tspUtil(Graph<int> g, Vertex<int> *current, vector<int> &currentRoute
         }
         return;
     }
-    //basically a DFS search
-    for (int i = 0; i < g.matrix[current->getInfo()].size(); i++) {
-        Vertex<int> *next = g.vertex_map[i];
-        if (g.matrix[current->getInfo()][i] != 0 && !next->isVisited()) {
+
+    for (Edge<int> *e : current->getAdj()) {
+        Vertex<int> *next = e->getDest();
+        if (!next->isVisited()) {
             next->setVisited(true);
             currentRoute.push_back(next->getInfo());
-            tspUtil(g, next, currentRoute, currentCost + g.matrix[current->getInfo()][i], bestRoute, minCost, level + 1);
+            tspUtil(g, next, currentRoute, currentCost + e->getWeight(), bestRoute, minCost, level + 1);
             next->setVisited(false);
             currentRoute.pop_back();
         }
     }
 }
 
-double Menu::triangleApproximationTSP(Graph<int>& g, unordered_map<int,pair<double,double>> c) { //tartar depois de esof
-    vector<Vertex<int> *> MST;
-    MST = prim(g, c); //PRIM WORKING!!
-
-    vector<Vertex<int>*> preorderList = MST;
-    vector<int> visited; // To keep track of visited vertices
-    double cost = 0;
+vector<Vertex<int>*> Menu::preOrderWalk(map<int,Vertex<int>*> MST){
+    vector<Vertex<int>*> result;
+    for(auto v : MST) v.second->setVisited(false);
     Vertex<int>* FirtNode = MST[0];
+
+    PreOrderWalkDFS(FirtNode,result);
+    return result;
+}
+
+void Menu::PreOrderWalkDFS(Vertex<int>* node,vector<Vertex<int>*>& result){
+    result.push_back(node);
+    node->setVisited(true);
+    for(auto e : node->getAdj()){
+        if(!e->getDest()->isVisited() && e->isSelected()) PreOrderWalkDFS(e->getDest(),result);
+    }
+}
+
+double Menu::triangleApproximationTSP(Graph<int>& g, unordered_map<int,pair<double,double>> c) {
+
+    vector<Vertex<int>*> Tour;
+    prim(g); //PRIM WORKING!!
+
+    vector<Vertex<int>*> preorderList = preOrderWalk(g.vertex_map);
+
+    for(auto v : preorderList) cout << v->getInfo() << ' ';
+    cout << '\n';
+    unordered_set<int> visited; // To keep track of visited vertices
+    double cost = 0;
+    Vertex<int>* FirtNode = g.vertex_map[0];
     Vertex<int>* lastNode;
     bool first = true;
     for(auto v : preorderList) v->setVisited(false);
+    double distance;
     for (const auto& node : preorderList) {
-        // If the current node has not been visited yet
+
         if (!node->isVisited()) {
             // If lastNode is not empty, compute distance between lastNode and current node
             if (!first) {
-                double distance = g.matrix[lastNode->getInfo()][node->getInfo()];
-                // Enforce the triangular inequality constraint
-                double triangleDistance = g.matrix[lastNode->getInfo()][FirtNode->getInfo()]
-                                          + g.matrix[FirtNode->getInfo()][node->getInfo()];
-                if (distance > triangleDistance) {
-                    // If the computed distance violates the triangular inequality, adjust it
-                    distance = triangleDistance;
-                }
+                if(findEdge(lastNode,node) != nullptr) distance = findEdge(lastNode,node)->getWeight();
+                else distance = haversine(c[lastNode->getInfo()].second, c[lastNode->getInfo()].first, c[node->getInfo()].second, c[node->getInfo()].first);
                 cost += distance;
             }
             first = false;
-            visited.push_back(node->getInfo());
-            node->setVisited(true);
             lastNode = node;
         }
     }
+    /*
     cout << "The path is: ";
+    vector<int> temp;
     for (auto it = visited.begin(); it != visited.end(); it++) {
-        cout << *it << " ";
+        cout << *it << ' ';
     }
+
     cout << "0\n";
-    cost += g.matrix[lastNode->getInfo()][FirtNode->getInfo()];
+     */
+    if(findEdge(lastNode,FirtNode) != nullptr) distance = findEdge(lastNode,FirtNode)->getWeight();
+    else distance = haversine(c[lastNode->getInfo()].second, c[lastNode->getInfo()].first, c[FirtNode->getInfo()].second, c[FirtNode->getInfo()].first);
+
+    cost += distance;
     return cost;
 }
+void Menu::prim(Graph<int>& g) {
+    vector<Vertex<int> *> result;
+    if (g.vertex_map.empty()) {
+        cerr << "Graph is empty! Abort program!";
+    }
+    for (auto v: g.vertex_map) {
+        v.second->setDist(INF);
+        v.second->setPath(nullptr);
+        v.second->setVisited(false);
+    }
 
+    MutablePriorityQueue<Vertex<int>> q;
+    for(auto v : g.vertex_map){
+        q.insert(v.second);
+    }
+    g.vertex_map[0]->setDist(0);
+
+    while (!q.empty()) {
+        auto v = q.extractMin();
+        v->setVisited(true);
+        if(v->getPath() != nullptr){
+            v->getPath()->setSelected(true);
+            v->getPath()->getReverse()->setSelected(true);
+        }
+        for(auto e : v->getAdj()){
+            auto dest = e->getDest();
+            if(!dest->isVisited()){
+
+                if(e->getWeight() < dest->getDist()){
+                    dest->setDist(e->getWeight());
+                    dest->setPath(e); //ligar o vertice dest aglomerado principal via este edge
+
+                    q.decreaseKey(dest); //updates the position of dest in the priority queue
+                }
+            }
+        }
+    }
+
+
+}
 vector<Edge<int>*> H;
 
 void Menu::minimumWeightPerfectMatching(vector<Vertex<int>*>& odd_vertices){
@@ -166,12 +221,13 @@ void Menu::heirholzer(Vertex<int>* v, vector<Vertex<int>*> &Ecircuit,unordered_m
         }
     }
 }
-
+/*
 vector<Vertex<int>*> Menu::eulerianCircuit(const vector<Edge<int>*>& H){
 
-    unordered_map<Vertex<int>*, vector<Edge<int>*>> adjList;
-    for (Edge<int>* edge : H) {
-        adjList[edge->getOrig()].push_back(edge);
+    for(auto v : d.getGraph().vertex_map){
+        for(auto e : v.second->getAdj()){
+
+        }
     }
     vector<Vertex<int>*> Ecircuit;
     Vertex<int>* startingNode;
@@ -198,29 +254,44 @@ vector<Vertex<int>*> Menu::ConvertToHamiltonianCircuit(vector<Vertex<int>*>& ECi
     hamiltonianCircuit.push_back(ECircuit.front());
     return hamiltonianCircuit;
 }
-
+*/
 double Menu::CalculateTotalCost(vector<Vertex<int>*> hamiltonianCircuit,unordered_map<int,pair<double,double>> c) {
     double cost = 0;
-    auto it = hamiltonianCircuit.begin();
-    while (true){
-        auto vCurrent = *it;
-        it++;
-        if (it == hamiltonianCircuit.end()) {
-            //Isto vai dar break, porque chegou ao último ponto e não existe um próximo ponto.
-            break;
+    Vertex<int>* FirtNode = d.getGraph().vertex_map[0];
+    Vertex<int>* lastNode;
+    bool first = true;
+    for(auto v : hamiltonianCircuit) v->setVisited(false);
+    double distance;
+    for (const auto& node : hamiltonianCircuit) {
+
+        if (!node->isVisited()) {
+            // If lastNode is not empty, compute distance between lastNode and current node
+            if (!first) {
+                if(findEdge(lastNode,node) != nullptr) distance = findEdge(lastNode,node)->getWeight();
+                else distance = haversine(c[lastNode->getInfo()].second, c[lastNode->getInfo()].first, c[node->getInfo()].second, c[node->getInfo()].first);
+                cost += distance;
+            }
+            first = false;
+            lastNode = node;
         }
-        auto vNext = *it;
-        cost += findEdge(vCurrent, vNext)->getWeight();
     }
+
+    if(findEdge(lastNode,FirtNode) != nullptr) distance = findEdge(lastNode,FirtNode)->getWeight();
+    else distance = haversine(c[lastNode->getInfo()].second, c[lastNode->getInfo()].first, c[FirtNode->getInfo()].second, c[FirtNode->getInfo()].first);
+
+    cost += distance;
     return cost;
 }
 
 double Menu::christofides_tsp(Graph<int> g, unordered_map<int,pair<double,double>> c){
     prim2(g);
     vector<Vertex<int>*> odd_vertices;
+    for(auto v : g.vertex_map){
+        if(v.second->getIncoming().size() + v.second->getAdj().size() % 2 != 0) odd_vertices.push_back(v.second);
+    }
+
     minimumWeightPerfectMatching(odd_vertices); //garante que todos os vertices tenham grau par, uma condiçao necessaria para encontrar um circuito euleriano
-    vector<Vertex<int>*> ECircuit = eulerianCircuit(H);
-    for(auto v : ECircuit) cout << v->getInfo() << '\n';
+    //vector<Vertex<int>*> ECircuit = eulerianCircuit(H);
     vector<Vertex<int>*> hamiltonianCircuit = ConvertToHamiltonianCircuit(ECircuit);
     double totalcost = CalculateTotalCost(hamiltonianCircuit,c);
     cout << "The path is: ";
@@ -259,12 +330,18 @@ double Menu::Closest_Node(Graph<int> g, unordered_map<int,pair<double,double>> c
         counter++;
     }
     auto return_edge = findEdge(Current_Node,g.vertex_map[0]);
+    if(return_edge != nullptr){
+        cost += return_edge->getWeight();
+    }
+    else{
+        cost += haversine(c[Current_Node->getInfo()].second, c[Current_Node->getInfo()].first, c[g.vertex_map[0]->getInfo()].second, c[g.vertex_map[0]->getInfo()].first);
+    }
     cout << "The path is: ";
     for (auto p : path) {
         cout << p->getInfo() << " ";
     }
     cout << "\n";
-    cost += return_edge->getWeight();
+
     return cost;
 }
 
@@ -307,44 +384,7 @@ double Menu::Closest_Node_Origin(Graph<int> g, unordered_map<int,pair<double,dou
     return cost;
 }
 
-vector<Vertex<int> *> Menu::prim(Graph<int> &g, unordered_map<int,pair<double,double>> c) {
-    vector<Vertex<int> *> result;
 
-    for (auto v: g.vertex_map) {
-        v.second->setDist(INF);
-        v.second->setPath(nullptr);
-        v.second->setVisited(false);
-    }
-
-    MutablePriorityQueue<Vertex<int>> q;
-    for(auto v : g.vertex_map){
-        q.insert(v.second);
-    }
-    g.vertex_map[0]->setDist(0);
-
-    while (!q.empty()) {
-        auto v = q.extractMin();
-        v->setVisited(true);
-        result.push_back(v);
-        for(int i = 0; i < g.matrix[v->getInfo()].size(); i++){
-            auto dest = g.vertex_map[i];
-            if (g.matrix[v->getInfo()][i] == 0 && i != v->getInfo()) {
-                g.matrix[v->getInfo()][i] = (int)haversine(c[v->getInfo()].second, c[v->getInfo()].first, c[i].second, c[i].first);
-            }
-            if(!dest->isVisited() && g.matrix[v->getInfo()][i] != 0) {
-                if(g.matrix[v->getInfo()][i] < dest->getDist()){
-                    dest->setDist(g.matrix[v->getInfo()][i]);
-                    Edge<int>* e = new Edge(v, dest, g.matrix[v->getInfo()][i]);
-                    dest->setPath(e); //ligar o vertice dest aglomerado principal via este edge
-
-                    q.decreaseKey(dest); //updates the position of dest in the priority queue
-                }
-            }
-        }
-    }
-
-    return result;
-}
 
 void Menu::prim2(Graph<int>& g) {
 

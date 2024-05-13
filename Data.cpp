@@ -53,8 +53,8 @@ void Data::parseGraph(string path, int size) {
         getline(iss, dist);
         //matrix[stoi(orig)][stoi(dest)] = stoi(dist);
         //matrix[stoi(dest)][stoi(orig)] = stoi(dist);
-        auto e1 = g.vertex_map[stoi(orig)]->addEdge(g.vertex_map[stoi(dest)], stoi(dist));
-        auto e2 = g.vertex_map[stoi(dest)]->addEdge(g.vertex_map[stoi(orig)], stoi(dist));
+        auto e1 = g.vertex_map[stoi(orig)]->addEdge(g.vertex_map[stoi(dest)], stod(dist));
+        auto e2 = g.vertex_map[stoi(dest)]->addEdge(g.vertex_map[stoi(orig)], stod(dist));
 
         e1->setReverse(e2);
         e2->setReverse(e1);
