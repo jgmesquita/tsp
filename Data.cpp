@@ -38,7 +38,7 @@ void Data::parseGraph(string path, int size) {
     if (path[1] != 'm') {
         getline(in, line);
     }
-    vector<vector<int>> matrix(size, vector<int>(size, 0));
+    //vector<vector<int>> matrix(size, vector<int>(size, 0));
     map<int,Vertex<int>*> vertexset;
     for (int i = 0; i < size; i++) {
         Vertex<int>* v = new Vertex(i);
@@ -51,10 +51,15 @@ void Data::parseGraph(string path, int size) {
         getline(iss, orig, ',');
         getline(iss, dest, ',');
         getline(iss, dist);
-        matrix[stoi(orig)][stoi(dest)] = stoi(dist);
-        matrix[stoi(dest)][stoi(orig)] = stoi(dist);
+        //matrix[stoi(orig)][stoi(dest)] = stoi(dist);
+        //matrix[stoi(dest)][stoi(orig)] = stoi(dist);
+        auto e1 = g.vertex_map[stoi(orig)]->addEdge(g.vertex_map[stoi(dest)], stoi(dist));
+        auto e2 = g.vertex_map[stoi(dest)]->addEdge(g.vertex_map[stoi(orig)], stoi(dist));
+
+        e1->setReverse(e2);
+        e2->setReverse(e1);
     }
-    g.matrix = matrix;
+    //g.matrix = matrix;
 
 }
 void Data::parseCoordinates() {

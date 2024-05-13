@@ -97,7 +97,7 @@ int main() {
             }
             case 3: {
                     chrono::steady_clock::time_point start = chrono::steady_clock::now();
-                    double cost = m.Closest_Node_Origin(g, c);
+                    double cost = m.christofides_tsp(g,c);
                     cout << "The cost is: " << cost << "\n";
                     chrono::steady_clock::time_point end = chrono::steady_clock::now();
                     chrono::duration<double, std::milli> duration = chrono::duration_cast<chrono::duration<double, std::milli>>(

@@ -30,9 +30,10 @@ public:
     double CalculateTotalCost(vector<Vertex<int>*> hamiltonianCircuit,unordered_map<int,pair<double,double>> c);
     double haversine(double lat1, double lon1, double lat2, double lon2);
     vector<Vertex<int> *> prim(Graph<int>& g, unordered_map<int,pair<double,double>> c);
-    void prim2(const Graph<int>& g);
+    void prim2(Graph<int>& g);
     Edge<int>* findEdge(Vertex<int>* from, Vertex<int>* to);
     double Closest_Node_Origin(Graph<int> g, unordered_map<int,pair<double,double>> c);
+    double Closest_Node(Graph<int> g, unordered_map<int,pair<double,double>> c);
 };
 
 #endif //PROJETO_2_DA_MENU_H

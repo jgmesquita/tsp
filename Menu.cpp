@@ -38,13 +38,13 @@ Edge<int>* Menu::findEdge(Vertex<int>* from, Vertex<int>* to) {
 }
 //Fully working!
 double Menu::tspBacktracking(Graph<int> g) {
-    for (auto v : g.getVertexSet()) {
-        v->setVisited(false);
+    for (auto v : g.vertex_map) {
+        v.second->setVisited(false);
     }
     vector<int> bestRoute;
     vector<int> currentRoute;
     double minCost = std::numeric_limits<double>::max();
-    Vertex<int> *v = g.getVertexSet()[0];
+    Vertex<int> *v = g.vertex_map[0];
     v->setVisited(true);
     currentRoute.push_back(v->getInfo());
     tspUtil(g, v,currentRoute, 0, bestRoute, minCost, 1);
@@ -60,10 +60,10 @@ void Menu::tspUtil(Graph<int> g, Vertex<int> *current, vector<int> &currentRoute
     //when it reaches the end
     //level is used to iterate over the right amount of nodes in the graph
     //stadium and tourism fully connected --- shipping not fully connected
-    if (level == g.getVertexSet().size()) {
-        for (Edge<int> *e : current->getAdj()) {
-            if (e->getDest()->getInfo() == currentRoute[0]) {
-                double totalCost = currentCost + e->getWeight();
+    if (level == g.vertex_map.size()) {
+        for (int i = 0; i < g.matrix[current->getInfo()].size(); i++) {
+            if (g.matrix[current->getInfo()][i] != 0 && g.vertex_map[i]->getInfo() == currentRoute[0]) {
+                double totalCost = currentCost + g.matrix[current->getInfo()][i];
                 if (totalCost < minCost) {
                     minCost = totalCost;
                     bestRoute = currentRoute;
@@ -75,25 +75,21 @@ void Menu::tspUtil(Graph<int> g, Vertex<int> *current, vector<int> &currentRoute
         return;
     }
     //basically a DFS search
-    for (Edge<int> *e : current->getAdj()) {
-        Vertex<int> *next = e->getDest();
-        if (!next->isVisited()) {
+    for (int i = 0; i < g.matrix[current->getInfo()].size(); i++) {
+        Vertex<int> *next = g.vertex_map[i];
+        if (g.matrix[current->getInfo()][i] != 0 && !next->isVisited()) {
             next->setVisited(true);
             currentRoute.push_back(next->getInfo());
-            tspUtil(g, next, currentRoute, currentCost + e->getWeight(), bestRoute, minCost, level + 1);
+            tspUtil(g, next, currentRoute, currentCost + g.matrix[current->getInfo()][i], bestRoute, minCost, level + 1);
             next->setVisited(false);
             currentRoute.pop_back();
         }
     }
 }
 
-double Menu::triangleApproximationTSP(Graph<int>& g, unordered_map<int,pair<double,double>> c) {
+double Menu::triangleApproximationTSP(Graph<int>& g, unordered_map<int,pair<double,double>> c) { //tartar depois de esof
     vector<Vertex<int> *> MST;
     MST = prim(g, c); //PRIM WORKING!!
-    for(auto row : g.matrix){
-        for(auto v : row) cout << v << ' ';
-        cout << '\n';
-    }
 
     vector<Vertex<int>*> preorderList = MST;
     vector<int> visited; // To keep track of visited vertices
@@ -221,7 +217,6 @@ double Menu::CalculateTotalCost(vector<Vertex<int>*> hamiltonianCircuit,unordere
 
 double Menu::christofides_tsp(Graph<int> g, unordered_map<int,pair<double,double>> c){
     prim2(g);
-
     vector<Vertex<int>*> odd_vertices;
     minimumWeightPerfectMatching(odd_vertices); //garante que todos os vertices tenham grau par, uma condiçao necessaria para encontrar um circuito euleriano
     vector<Vertex<int>*> ECircuit = eulerianCircuit(H);
@@ -234,6 +229,43 @@ double Menu::christofides_tsp(Graph<int> g, unordered_map<int,pair<double,double
     }
     cout << "\n";
     return totalcost;
+}
+
+double Menu::Closest_Node(Graph<int> g, unordered_map<int,pair<double,double>> c){
+    for(auto v : g.vertex_map) v.second->setVisited(false);
+    double cost = 0;
+    int counter = 0;
+    Vertex<int>* Current_Node = g.vertex_map[0];
+    Current_Node->setVisited(true);
+    Vertex<int>* Target_node;
+    vector<Vertex<int>*> path;
+    path.push_back(Current_Node);
+
+    while(counter < g.vertex_map.size() - 1){
+        double minimum_cost_edge = std::numeric_limits<double>::max();
+        for(auto e : Current_Node->getAdj()){
+            if(!e->getDest()->isVisited()){
+                if(e->getWeight() < minimum_cost_edge){
+                    minimum_cost_edge = e->getWeight();
+                    Target_node = e->getDest();
+                }
+            }
+        }
+
+        cost += minimum_cost_edge;
+        Target_node->setVisited(true);
+        Current_Node = Target_node;
+        path.push_back(Target_node);
+        counter++;
+    }
+    auto return_edge = findEdge(Current_Node,g.vertex_map[0]);
+    cout << "The path is: ";
+    for (auto p : path) {
+        cout << p->getInfo() << " ";
+    }
+    cout << "\n";
+    cost += return_edge->getWeight();
+    return cost;
 }
 
 double Menu::Closest_Node_Origin(Graph<int> g, unordered_map<int,pair<double,double>> c){
@@ -314,21 +346,19 @@ vector<Vertex<int> *> Menu::prim(Graph<int> &g, unordered_map<int,pair<double,do
     return result;
 }
 
-void Menu::prim2(const Graph<int>& g) {
-    if (g.getVertexSet().empty()) {
-        cerr << "Graph is empty! Abort program!";
-    }
-    for (auto v: g.getVertexSet()) {
-        v->setDist(INF);
-        v->setPath(nullptr);
-        v->setVisited(false);
+void Menu::prim2(Graph<int>& g) {
+
+    for (auto v: g.vertex_map) {
+        v.second->setDist(INF);
+        v.second->setPath(nullptr);
+        v.second->setVisited(false);
     }
 
     MutablePriorityQueue<Vertex<int>> q;
-    for(auto v : g.getVertexSet()){
-        q.insert(v);
+    for(auto v : g.vertex_map){
+        q.insert(v.second);
     }
-    g.getVertexSet()[0]->setDist(0);
+    g.vertex_map[0]->setDist(0);
 
     while (!q.empty()) {
         auto v = q.extractMin();
@@ -346,9 +376,9 @@ void Menu::prim2(const Graph<int>& g) {
             }
         }
     }
-    for (auto v : g.getVertexSet()) {
-        if (v->getPath() != nullptr) {
-            H.push_back(v->getPath());
+    for (auto v : g.vertex_map) {
+        if (v.second->getPath() != nullptr) {
+            H.push_back(v.second->getPath());
         }
     }
 
