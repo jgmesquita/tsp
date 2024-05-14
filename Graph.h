@@ -86,12 +86,14 @@ public:
     Vertex<T> * getDest() const;
     double getWeight() const;
     bool isSelected() const;
+    bool isMST() const;
     Vertex<T> * getOrig() const;
     Edge<T> *getReverse() const;
     double getFlow() const;
 
     void setSelected(bool selected);
     void setReverse(Edge<T> *reverse);
+    void setMST(bool mst);
     void setFlow(double flow);
     void setWeight(double weight);
     double getRestore() const;
@@ -101,7 +103,7 @@ protected:
     double weight; // edge weight, can also be used for capacity
     // auxiliary fields
     bool selected = false;
-
+    bool belongsMST = false;
     // used for bidirectional edges
     Vertex<T> *orig;
     Edge<T> *reverse = nullptr;
@@ -365,6 +367,14 @@ void Edge<T>::setReverse(Edge<T> *reverse) {
 template <class T>
 void Edge<T>::setFlow(double flow) {
     this->flow = flow;
+}
+template<class T>
+void Edge<T>::setMST(bool mst) {
+    this->belongsMST = mst;
+}
+template<class T>
+bool Edge<T>::isMST() const {
+    return this->belongsMST;
 }
 
 /********************** Graph  ****************************/

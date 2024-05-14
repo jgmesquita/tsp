@@ -30,9 +30,13 @@ unordered_map<int,pair<double,double>> Menu::getCoordinates() {
 
 Edge<int>* Menu::findEdge(Vertex<int>* from, Vertex<int>* to) {
     for (Edge<int>* edge : from->getAdj()) {
-        if (edge->getDest()->getInfo() == to->getInfo()) {
+        if (edge->getDest()->getInfo() == to->getInfo() && edge->isMST()) {
             return edge;
         }
+        else if(edge->getDest()->getInfo() == to->getInfo()){
+            return edge;
+        }
+
     }
     return nullptr;
 }
@@ -95,7 +99,9 @@ void Menu::PreOrderWalkDFS(Vertex<int>* node,vector<Vertex<int>*>& result){
     result.push_back(node);
     node->setVisited(true);
     for(auto e : node->getAdj()){
-        if(!e->getDest()->isVisited() && e->isSelected()) PreOrderWalkDFS(e->getDest(),result);
+        if(!e->getDest()->isVisited() && e->isMST()) {
+            PreOrderWalkDFS(e->getDest(), result);
+        }
     }
 }
 
@@ -104,6 +110,7 @@ double Menu::triangleApproximationTSP(Graph<int>& g, unordered_map<int,pair<doub
     vector<Vertex<int>*> Tour;
     prim(g); //PRIM WORKING!!
 
+    cout << '\n';
     vector<Vertex<int>*> preorderList = preOrderWalk(g.vertex_map);
 
     for(auto v : preorderList) cout << v->getInfo() << ' ';
@@ -120,8 +127,18 @@ double Menu::triangleApproximationTSP(Graph<int>& g, unordered_map<int,pair<doub
         if (!node->isVisited()) {
             // If lastNode is not empty, compute distance between lastNode and current node
             if (!first) {
-                if(findEdge(lastNode,node) != nullptr) distance = findEdge(lastNode,node)->getWeight();
-                else distance = haversine(c[lastNode->getInfo()].second, c[lastNode->getInfo()].first, c[node->getInfo()].second, c[node->getInfo()].first);
+                Edge<int>* edge = findEdge(lastNode, node);
+                if(edge != NULL){
+                    distance = findEdge(lastNode,node)->getWeight();
+                }
+                else {
+                    distance = haversine(c[lastNode->getInfo()].second, c[lastNode->getInfo()].first, c[node->getInfo()].second, c[node->getInfo()].first);
+                    if(distance == 0){
+                        cost = -1;
+                        cout <<"Impossible!"<< '\n';
+                        return cost;
+                    }
+                }
                 cost += distance;
             }
             first = false;
@@ -164,8 +181,10 @@ void Menu::prim(Graph<int>& g) {
         auto v = q.extractMin();
         v->setVisited(true);
         if(v->getPath() != nullptr){
-            v->getPath()->setSelected(true);
-            v->getPath()->getReverse()->setSelected(true);
+            v->getPath()->setMST(true);
+            v->getPath()->getReverse()->setMST(true);
+            v->setIndegree(v->getIndegree() + 2);
+            v->getPath()->getOrig()->setIndegree(v->getPath()->getOrig()->getIndegree() + 2);
         }
         for(auto e : v->getAdj()){
             auto dest = e->getDest();
@@ -204,40 +223,31 @@ void Menu::minimumWeightPerfectMatching(vector<Vertex<int>*>& odd_vertices){
         if(!e->getOrig()->isVisited() && !e->getDest()->isVisited()){
             e->getOrig()->setVisited(true);
             e->getDest()->setVisited(true);
-            H.push_back(e);
+            e->setMST(true);
         }
     }
 
 
 }
 
-void Menu::heirholzer(Vertex<int>* v, vector<Vertex<int>*> &Ecircuit,unordered_map<Vertex<int>*, vector<Edge<int>*>> adjList){
+void Menu::heirholzer(Vertex<int>* v, vector<Vertex<int>*> &Ecircuit){
     Ecircuit.push_back(v);
-    for(auto e : adjList[v]){
-        if(!e->isSelected()){
+    for(auto e : v->getAdj()){
+        if(!e->isSelected() && e->isMST()){
             e->setSelected(true);
             e->getReverse()->setSelected(true);
-            heirholzer(e->getDest(),Ecircuit,adjList);
+            heirholzer(e->getDest(),Ecircuit);
         }
     }
+
 }
-/*
-vector<Vertex<int>*> Menu::eulerianCircuit(const vector<Edge<int>*>& H){
 
-    for(auto v : d.getGraph().vertex_map){
-        for(auto e : v.second->getAdj()){
+vector<Vertex<int>*> Menu::eulerianCircuit(){
 
-        }
-    }
     vector<Vertex<int>*> Ecircuit;
-    Vertex<int>* startingNode;
-    for (auto e : H) {
-        if (e->getOrig()->getInfo() == 0) {
-            startingNode = e->getOrig();
-            break;
-        }
-    }
-    heirholzer(startingNode, Ecircuit,adjList);
+    Vertex<int>* Starting_node = d.getGraph().vertex_map[0];
+    heirholzer(Starting_node,Ecircuit);
+
     return Ecircuit;
 }
 
@@ -247,14 +257,14 @@ vector<Vertex<int>*> Menu::ConvertToHamiltonianCircuit(vector<Vertex<int>*>& ECi
     for (Vertex<int>* v : ECircuit) {
         if (!v->isVisited()) {
             hamiltonianCircuit.push_back(v);
-
+            v->setVisited(true);
         }
     }
     // Add the starting vertex again to complete the Hamiltonian circuit
     hamiltonianCircuit.push_back(ECircuit.front());
     return hamiltonianCircuit;
 }
-*/
+
 double Menu::CalculateTotalCost(vector<Vertex<int>*> hamiltonianCircuit,unordered_map<int,pair<double,double>> c) {
     double cost = 0;
     Vertex<int>* FirtNode = d.getGraph().vertex_map[0];
@@ -284,14 +294,15 @@ double Menu::CalculateTotalCost(vector<Vertex<int>*> hamiltonianCircuit,unordere
 }
 
 double Menu::christofides_tsp(Graph<int> g, unordered_map<int,pair<double,double>> c){
-    prim2(g);
+    prim(g);
     vector<Vertex<int>*> odd_vertices;
     for(auto v : g.vertex_map){
-        if(v.second->getIncoming().size() + v.second->getAdj().size() % 2 != 0) odd_vertices.push_back(v.second);
+        if(v.second->getIndegree() % 2 != 0) odd_vertices.push_back(v.second);
     }
 
     minimumWeightPerfectMatching(odd_vertices); //garante que todos os vertices tenham grau par, uma condiçao necessaria para encontrar um circuito euleriano
-    //vector<Vertex<int>*> ECircuit = eulerianCircuit(H);
+
+    vector<Vertex<int>*> ECircuit = eulerianCircuit();
     vector<Vertex<int>*> hamiltonianCircuit = ConvertToHamiltonianCircuit(ECircuit);
     double totalcost = CalculateTotalCost(hamiltonianCircuit,c);
     cout << "The path is: ";

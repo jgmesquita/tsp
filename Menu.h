@@ -24,8 +24,8 @@ public:
     double triangleApproximationTSP(Graph<int>& g, unordered_map<int,pair<double,double>> c);
     double christofides_tsp(Graph<int> g, unordered_map<int,pair<double,double>> c);
     void minimumWeightPerfectMatching(vector<Vertex<int>*>& odd_vertices);
-    vector<Vertex<int>*> eulerianCircuit(const vector<Edge<int>*>& H);
-    void heirholzer(Vertex<int>* v, vector<Vertex<int>*> &Ecircuit,unordered_map<Vertex<int>*);
+    vector<Vertex<int>*> eulerianCircuit();
+    void heirholzer(Vertex<int>* v, vector<Vertex<int>*> &Ecircuit);
     vector<Vertex<int>*> ConvertToHamiltonianCircuit(vector<Vertex<int>*>& ECircuit);
     double CalculateTotalCost(vector<Vertex<int>*> hamiltonianCircuit,unordered_map<int,pair<double,double>> c);
     double haversine(double lat1, double lon1, double lat2, double lon2);
