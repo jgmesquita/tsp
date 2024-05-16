@@ -144,6 +144,7 @@ public:
 
     int getNumVertex() const;
     std::vector<Vertex<T> *> getVertexSet() const;
+    void setSize(int size);
 
     std:: vector<T> dfs() const;
     std:: vector<T> dfs(const T & source) const;
@@ -384,6 +385,11 @@ int Graph<T>::getNumVertex() const {
     return vertexSet.size();
 }
 
+template<class T>
+void Graph<T>::setSize(int size) {
+    this->vertexSet.resize(size, nullptr);
+}
+
 template <class T>
 std::vector<Vertex<T> *> Graph<T>::getVertexSet() const {
     return vertexSet;
@@ -394,10 +400,8 @@ std::vector<Vertex<T> *> Graph<T>::getVertexSet() const {
  */
 template <class T>
 Vertex<T> * Graph<T>::findVertex(const T &in) const {
-    for (auto v : vertexSet)
-        if (v->getInfo() == in)
-            return v;
-    return nullptr;
+
+    return vertexSet[in];
 }
 
 /*
@@ -416,9 +420,7 @@ int Graph<T>::findVertexIdx(const T &in) const {
  */
 template <class T>
 bool Graph<T>::addVertex(const T &in) {
-    if (findVertex(in) != nullptr)
-        return false;
-    vertexSet.push_back(new Vertex<T>(in));
+    if(vertexSet[in] == nullptr) vertexSet[in] = new Vertex<T>(in);
     return true;
 }
 

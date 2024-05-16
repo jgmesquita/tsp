@@ -30,7 +30,7 @@ public:
     double CalculateTotalCost(vector<Vertex<int>*> hamiltonianCircuit,unordered_map<int,pair<double,double>> c);
     double haversine(double lat1, double lon1, double lat2, double lon2);
     void prim(Graph<int>& g);
-    vector<Vertex<int>*> preOrderWalk(map<int,Vertex<int>*> MST);
+    vector<Vertex<int>*> preOrderWalk(vector<Vertex<int>*> MST);
     void PreOrderWalkDFS(Vertex<int>* node, vector<Vertex<int>*>& result);
     void prim2(Graph<int>& g);
     Edge<int>* findEdge(Vertex<int>* from, Vertex<int>* to);
