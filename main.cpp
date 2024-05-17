@@ -69,7 +69,8 @@ int main() {
         cout << "Choose one of the following options!\n";
         cout << "[1] - Backtracking TSP; \n";
         cout << "[2] - Triangular Inequality Approximation TSP; \n";
-        cout << "[3] - Nearest Neighbour TSP; \n";
+        cout << "[3] - Christofides TSP; \n";
+        cout << "[4] - Greedy TSP;\n";
         cin >> choice;
         cout << "\n";
         switch (choice) {
@@ -96,8 +97,26 @@ int main() {
                 break;
             }
             case 3: {
+                chrono::steady_clock::time_point start = chrono::steady_clock::now();
+                double cost = m.christofides_tsp(g, c);
+                cout << "The cost is: " << cost << "\n";
+                chrono::steady_clock::time_point end = chrono::steady_clock::now();
+                chrono::duration<double, std::milli> duration = chrono::duration_cast<chrono::duration<double, std::milli>>(
+                        end - start);
+                double time = duration.count();
+                cout << "The duration is: " << time << "ms" << "\n";
+                break;
+            }
+            case 4: {
+                    int origin;
+                    cout << "Select the origin node:\n";
+                    cin >> origin;
+                    if(origin > size) {
+                        cerr << "Invalid input! Abort program!";
+                        break;
+                    }
                     chrono::steady_clock::time_point start = chrono::steady_clock::now();
-                    double cost = m.christofides_tsp(g,c);
+                    double cost = m.greedyTSP(g, origin);
                     cout << "The cost is: " << cost << "\n";
                     chrono::steady_clock::time_point end = chrono::steady_clock::now();
                     chrono::duration<double, std::milli> duration = chrono::duration_cast<chrono::duration<double, std::milli>>(

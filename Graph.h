@@ -25,8 +25,8 @@ template <class T>
 /**
 * @class Vertex
 * @tparam T
-* @brief For this specific project, a vertex's info is the code of any of the multiple structures
- * that composes the water supply network(Pumping Stations, Cities or Reservoirs)
+* @brief For this specific project, a vertex's info is just the identifier of each vertex, and each vertex
+ * represents a location
 */
 class Vertex {
 public:
@@ -76,8 +76,7 @@ template <class T>
 /**
 * @class Edge
 * @tparam T
-* @brief For this specific project, an edge represents a Pipe that can be either unidirectional or bidirectional
- * that connects to structures
+* @brief For this specific project, an edge represents the distance between two locations(vertexes)
 */
 class Edge {
 public:
@@ -154,8 +153,7 @@ public:
     bool isDAG() const;
     bool dfsIsDAG(Vertex<T> *v) const;
     std::vector<T> topsort() const;
-    std::vector<std::vector<int>> matrix;
-    std::map<int, Vertex<T>*> vertex_map;
+    std::vector<std::vector<double>> matrix;
 
 protected:
     std::vector<Vertex<T> *> vertexSet;    // vertex set

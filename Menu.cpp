@@ -4,14 +4,11 @@
 
 using namespace std;
 
+/**
+ *
+ */
 Menu::Menu() {
     this->d = Data();
-}
-
-Menu::Menu(string path) {
-    this->d = Data();
-    d.parseGraph(path);
-    d.parseCoordinates();
 }
 
 Menu::Menu(string path, int size) {
@@ -40,6 +37,7 @@ Edge<int>* Menu::findEdge(Vertex<int>* from, Vertex<int>* to) {
     }
     return nullptr;
 }
+
 //Fully working!
 double Menu::tspBacktracking(Graph<int> g) {
     for (auto v : g.getVertexSet()) {
@@ -108,9 +106,8 @@ void Menu::PreOrderWalkDFS(Vertex<int>* node,vector<Vertex<int>*>& result){
 }
 
 double Menu::triangleApproximationTSP(Graph<int>& g, unordered_map<int,pair<double,double>> c) {
-    cout << c[4931].second << ' ' << c[4931].first << "-->" << c[4394].second << ' ' << c[4394].first << '\n';
 
-         vector<Vertex<int>*> Tour;
+    vector<Vertex<int>*> Tour;
     prim(g); //PRIM WORKING!!
 
     cout << '\n';
@@ -143,16 +140,9 @@ double Menu::triangleApproximationTSP(Graph<int>& g, unordered_map<int,pair<doub
             lastNode = node;
         }
     }
-    /*
-    cout << "The path is: ";
-    vector<int> temp;
-    for (auto it = visited.begin(); it != visited.end(); it++) {
-        cout << *it << ' ';
-    }
 
-    cout << "0\n";
-     */
-    if(findEdge(lastNode,FirtNode) != nullptr) distance = findEdge(lastNode,FirtNode)->getWeight();
+
+    if(findEdge(lastNode,FirtNode) != NULL) distance = findEdge(lastNode,FirtNode)->getWeight();
     else distance = haversine(c[lastNode->getInfo()].second, c[lastNode->getInfo()].first, c[FirtNode->getInfo()].second, c[FirtNode->getInfo()].first);
 
     cost += distance;
@@ -167,6 +157,11 @@ void Menu::prim(Graph<int>& g) {
         v->setDist(INF);
         v->setPath(nullptr);
         v->setVisited(false);
+        v->setIndegree(0);
+        for(auto e : v->getAdj()){
+            e->setMST(false);
+            e->setSelected(false);
+        }
     }
 
     MutablePriorityQueue<Vertex<int>> q;
@@ -181,8 +176,6 @@ void Menu::prim(Graph<int>& g) {
         if(v->getPath() != nullptr){
             v->getPath()->setMST(true);
             v->getPath()->getReverse()->setMST(true);
-            v->setIndegree(v->getIndegree() + 2);
-            v->getPath()->getOrig()->setIndegree(v->getPath()->getOrig()->getIndegree() + 2);
         }
         for(auto e : v->getAdj()){
             auto dest = e->getDest();
@@ -200,25 +193,27 @@ void Menu::prim(Graph<int>& g) {
 
 
 }
-vector<Edge<int>*> H;
 
 void Menu::minimumWeightPerfectMatching(vector<Vertex<int>*>& odd_vertices){
     vector<Edge<int>*> result;
     vector<Edge<int>*> potencial_edges;
-
     for(auto v : odd_vertices) v->setVisited(false);
+
+
 
     for(auto v : odd_vertices){
         for(auto e : v->getAdj()){
-            if(v->getInfo() < e->getDest()->getInfo() && (e->getDest()->getIncoming().size() + e->getDest()->getAdj().size()) % 2 != 0) potencial_edges.push_back(e);
+            if(v->getInfo() < e->getDest()->getInfo() && (e->getDest()->getAdj().size() % 2 != 0)) potencial_edges.push_back(e);
         }
     }
     sort(potencial_edges.begin(),potencial_edges.end(),[](Edge<int>* first, Edge<int>* second) {
         return first->getWeight() < second->getWeight();
     }); //sort the edges by weight in order to find the minimum weight matching
 
+
     for(auto e : potencial_edges){
         if(!e->getOrig()->isVisited() && !e->getDest()->isVisited()){
+
             e->getOrig()->setVisited(true);
             e->getDest()->setVisited(true);
             e->setMST(true);
@@ -230,20 +225,23 @@ void Menu::minimumWeightPerfectMatching(vector<Vertex<int>*>& odd_vertices){
 
 void Menu::heirholzer(Vertex<int>* v, vector<Vertex<int>*> &Ecircuit){
     Ecircuit.push_back(v);
+    v->setVisited(true);
     for(auto e : v->getAdj()){
-        if(!e->isSelected() && e->isMST()){
+        if(!e->isSelected() && e->isMST() && !e->getDest()->isVisited()){
             e->setSelected(true);
             e->getReverse()->setSelected(true);
             heirholzer(e->getDest(),Ecircuit);
+
         }
     }
 
 }
 
 vector<Vertex<int>*> Menu::eulerianCircuit(){
-
+    for(auto v : d.getGraph().getVertexSet()) v->setVisited(false);
     vector<Vertex<int>*> Ecircuit;
     Vertex<int>* Starting_node = d.getGraph().getVertexSet()[0];
+    Starting_node->setVisited(true);
     heirholzer(Starting_node,Ecircuit);
 
     return Ecircuit;
@@ -275,7 +273,7 @@ double Menu::CalculateTotalCost(vector<Vertex<int>*> hamiltonianCircuit,unordere
         if (!node->isVisited()) {
             // If lastNode is not empty, compute distance between lastNode and current node
             if (!first) {
-                if(findEdge(lastNode,node) != nullptr) distance = findEdge(lastNode,node)->getWeight();
+                if(d.matrix[lastNode->getInfo()][node->getInfo()] != 0) distance = d.matrix[lastNode->getInfo()][node->getInfo()];
                 else distance = haversine(c[lastNode->getInfo()].second, c[lastNode->getInfo()].first, c[node->getInfo()].second, c[node->getInfo()].first);
                 cost += distance;
             }
@@ -293,146 +291,148 @@ double Menu::CalculateTotalCost(vector<Vertex<int>*> hamiltonianCircuit,unordere
 
 double Menu::christofides_tsp(Graph<int> g, unordered_map<int,pair<double,double>> c){
     prim(g);
+
     vector<Vertex<int>*> odd_vertices;
     for(auto v : g.getVertexSet()){
-        if(v->getIndegree() % 2 != 0) odd_vertices.push_back(v);
+        if(v->getAdj().size() % 2 != 0) odd_vertices.push_back(v);
     }
-
     minimumWeightPerfectMatching(odd_vertices); //garante que todos os vertices tenham grau par, uma condiçao necessaria para encontrar um circuito euleriano
 
     vector<Vertex<int>*> ECircuit = eulerianCircuit();
+
     vector<Vertex<int>*> hamiltonianCircuit = ConvertToHamiltonianCircuit(ECircuit);
+
+    twoOpt2(hamiltonianCircuit,c);
     double totalcost = CalculateTotalCost(hamiltonianCircuit,c);
-    /*
-    cout << "The path is: ";
-    for (auto v : hamiltonianCircuit) {
-        cout << v->getInfo() << " ";
-    }
-    cout << "\n";
-     */
+
     return totalcost;
 }
 
-double Menu::Closest_Node(Graph<int> g, unordered_map<int,pair<double,double>> c){
-    for(auto v : g.vertex_map) v.second->setVisited(false);
+void Menu::twoOpt2(std::vector<Vertex<int>*>& tour, unordered_map<int,pair<double,double>> c) {
+    //this algorithm will try two swap two edges, n tries to see if the tour improves
+    bool improved = true;
+    double dAB = 0; //edges that will be swaped
+    double dCD = 0;
+
+    double dAC = 0; //edges that swap
+    double dBD = 0;
+
+    //4 distances in order to swap two edges at a time
+    Vertex<int>* vertexA;
+    Vertex<int>* vertexB;
+    Vertex<int>* vertexC;
+    Vertex<int>* vertexD;
+    int n = 3; //numbers of tries to improve the tour
+
+    while (improved && (n > 0)) {
+        improved = false;
+
+        for (int i = 0; i < tour.size() - 2; i++) {
+            vertexA = tour[i];
+            vertexB = tour[i + 1];
+            if(d.matrix[vertexA->getInfo()][vertexB->getInfo()] == 0){
+                dAB = haversine(c[vertexA->getInfo()].second, c[vertexA->getInfo()].first, c[vertexB->getInfo()].second, c[vertexB->getInfo()].first);
+            }
+            else {
+                dAB = d.matrix[vertexA->getInfo()][vertexB->getInfo()];
+            }
+            for (int j = i + 2; j < tour.size()-1; j++) {
+                vertexC = tour[j];
+                vertexD = tour[j + 1];
+                if(d.matrix[vertexC->getInfo()][vertexD->getInfo()] == 0){
+                    dCD = haversine(c[vertexC->getInfo()].second, c[vertexC->getInfo()].first, c[vertexD->getInfo()].second, c[vertexD->getInfo()].first);
+                }
+                else {
+                    dCD = d.matrix[vertexC->getInfo()][vertexD->getInfo()];
+                }
+                if(d.matrix[vertexA->getInfo()][vertexC->getInfo()] == 0){
+                    dAC = haversine(c[vertexA->getInfo()].second, c[vertexA->getInfo()].first, c[vertexC->getInfo()].second, c[vertexC->getInfo()].first);
+                }
+                else {
+                    dAC = d.matrix[vertexA->getInfo()][vertexC->getInfo()];
+                }
+                if(d.matrix[vertexB->getInfo()][vertexD->getInfo()] == 0){
+                    dBD = haversine(c[vertexB->getInfo()].second, c[vertexB->getInfo()].first, c[vertexD->getInfo()].second, c[vertexD->getInfo()].first);
+                }
+                else {
+                    dBD = d.matrix[vertexB->getInfo()][vertexD->getInfo()];
+                }
+
+                double currentDistance = dAB + dCD;
+                double newDistance = dAC + dBD;
+
+                if (newDistance < currentDistance) {
+                    std::reverse(tour.begin() + i + 1, tour.begin() + j + 1);
+                    improved = true;
+                    vertexA = tour[i];
+                    vertexB = tour[i + 1];
+                    if(d.matrix[vertexA->getInfo()][vertexB->getInfo()] == 0 || d.matrix[vertexB->getInfo()][vertexA->getInfo()] == 0){
+                        dAB = haversine(c[vertexA->getInfo()].second, c[vertexA->getInfo()].first, c[vertexB->getInfo()].second, c[vertexB->getInfo()].first);
+                    }
+                    else {
+                        dAB = d.matrix[vertexA->getInfo()][vertexB->getInfo()];
+                    }
+                }
+            }
+        }
+        n--;
+
+    }
+}
+
+double Menu::greedyTSP(Graph<int> g,int origin) {
+    // Prepare for loop!
+    for (auto v : g.getVertexSet()) {
+        v->setVisited(false);
+    }
     double cost = 0;
     int counter = 0;
-    Vertex<int>* Current_Node = g.vertex_map[0];
-    Current_Node->setVisited(true);
-    Vertex<int>* Target_node;
+    Vertex<int>* current = g.getVertexSet()[origin];
+    current->setVisited(true);
+    Vertex<int>* target;
     vector<Vertex<int>*> path;
-    path.push_back(Current_Node);
+    path.push_back(current);
 
-    while(counter < g.vertex_map.size() - 1){
-        double minimum_cost_edge = std::numeric_limits<double>::max();
-        for(auto e : Current_Node->getAdj()){
+
+    //These nodes are important for the returning path!
+
+    // Main Loop
+    while (counter < g.getVertexSet().size() - 1) {
+        auto adj = current->getAdj();
+        double ratio = std::numeric_limits<double>::max();
+        double cost_edge;
+        for(auto e : adj){
             if(!e->getDest()->isVisited()){
-                if(e->getWeight() < minimum_cost_edge){
-                    minimum_cost_edge = e->getWeight();
-                    Target_node = e->getDest();
+                if((e->getWeight()/ e->getDest()->getIncoming().size()) < ratio){
+                    cost_edge = e->getWeight();
+                    ratio = e->getWeight() / e->getDest()->getIncoming().size();
+                    target = e->getDest();
                 }
             }
         }
-
-        cost += minimum_cost_edge;
-        Target_node->setVisited(true);
-        Current_Node = Target_node;
-        path.push_back(Target_node);
-        counter++;
-    }
-    auto return_edge = findEdge(Current_Node,g.vertex_map[0]);
-    if(return_edge != nullptr){
-        cost += return_edge->getWeight();
-    }
-    else{
-        cost += haversine(c[Current_Node->getInfo()].second, c[Current_Node->getInfo()].first, c[g.vertex_map[0]->getInfo()].second, c[g.vertex_map[0]->getInfo()].first);
-    }
-    cout << "The path is: ";
-    for (auto p : path) {
-        cout << p->getInfo() << " ";
-    }
-    cout << "\n";
-
-    return cost;
-}
-
-double Menu::Closest_Node_Origin(Graph<int> g, unordered_map<int,pair<double,double>> c){
-    for(auto v : g.vertex_map) v.second->setVisited(false);
-    double cost = 0;
-    int counter = 0;
-    Vertex<int>* Current_Node = g.vertex_map[0];
-    Current_Node->setVisited(true);
-    Vertex<int>* Target_node;
-    vector<Vertex<int>*> path;
-    path.push_back(Current_Node);
-    while(counter < g.vertex_map.size() - 1){
-        double minimum_cost_edge = std::numeric_limits<double>::max();
-        for(int i = 0; i < g.matrix[Current_Node->getInfo()].size(); i++){
-            if(g.matrix[Current_Node->getInfo()][i] == 0 && Current_Node->getInfo() != i ) {
-                g.matrix[Current_Node->getInfo()][i] = (int)haversine(c[Current_Node->getInfo()].second, c[Current_Node->getInfo()].first, c[i].second, c[i].first);
-            }
-            if(!g.vertex_map[i]->isVisited() && (g.matrix[Current_Node->getInfo()][i] != 0)){
-
-                if(g.matrix[Current_Node->getInfo()][i] < minimum_cost_edge){
-                    minimum_cost_edge = g.matrix[Current_Node->getInfo()][i];
-                    Target_node = g.vertex_map[i];
-                }
-            }
+        // Detect if it got stucked!
+        if (ratio == std::numeric_limits<double>::max()) {
+            cerr << "It is not possible to find a path!\n";
+            return -1;
         }
-        cost += minimum_cost_edge;
-        Target_node->setVisited(true);
-        Current_Node = Target_node;
-        path.push_back(Target_node);
+        //Update Values
+        cost += cost_edge;
+        target->setVisited(true);
+        current = target;
+        path.push_back(target);
         counter++;
     }
 
-    cost += g.matrix[Current_Node->getInfo()][0];
-    cout << "The path is: ";
-    for (auto p : path) {
-        cout << p->getInfo() << " ";
+    // Find the last edge!
+    Edge<int>* returnEdge = findEdge(current,g.getVertexSet()[origin]);
+    if (returnEdge != nullptr) {
+        cost += returnEdge->getWeight();
     }
-    cout << '0' << "\n";
+    else {
+        cerr << "It doesn't have a path between the final node and the starting node!" << endl;
+        return -1;
+    }
     return cost;
-}
-
-
-
-void Menu::prim2(Graph<int>& g) {
-
-    for (auto v: g.vertex_map) {
-        v.second->setDist(INF);
-        v.second->setPath(nullptr);
-        v.second->setVisited(false);
-    }
-
-    MutablePriorityQueue<Vertex<int>> q;
-    for(auto v : g.vertex_map){
-        q.insert(v.second);
-    }
-    g.vertex_map[0]->setDist(0);
-
-    while (!q.empty()) {
-        auto v = q.extractMin();
-        v->setVisited(true);
-        for(auto e : v->getAdj()){
-            auto dest = e->getDest();
-            if(!dest->isVisited()){
-
-                if(e->getWeight() < dest->getDist()){
-                    dest->setDist(e->getWeight());
-                    dest->setPath(e); //ligar o vertice dest aglomerado principal via este edge
-
-                    q.decreaseKey(dest); //updates the position of dest in the priority queue
-                }
-            }
-        }
-    }
-    for (auto v : g.vertex_map) {
-        if (v.second->getPath() != nullptr) {
-            H.push_back(v.second->getPath());
-        }
-    }
-
 }
 
 double Menu::haversine(double lat1, double lon1, double lat2, double lon2) {
@@ -450,72 +450,3 @@ double Menu::haversine(double lat1, double lon1, double lat2, double lon2) {
     }
     return rad * c * 1000;
 }
-/*
-vector<int> twoOpt(const vector<int>& tour, const vector<vector<double>>& distanceMatrix){
-    std::vector<int> newTour = tour;
-    bool improved = true;
-
-    while (improved) {
-        improved = false;
-        for (size_t i = 1; i < newTour.size() - 2; ++i) {
-            for (size_t j = i + 1; j < newTour.size() - 1; ++j) {
-                double delta = distanceMatrix[newTour[i - 1]][newTour[j]] + distanceMatrix[newTour[i]][newTour[j + 1]]
-                               - distanceMatrix[newTour[i - 1]][newTour[i]] - distanceMatrix[newTour[j]][newTour[j + 1]];
-
-                if (delta < 0) {
-                    std::reverse(newTour.begin() + i, newTour.begin() + j + 1);
-                    improved = true;
-                }
-            }
-        }
-    }
-
-    return newTour;
-}
-
-// Function to perturb the solution (e.g., randomly swap a few edges)
-vector<int> perturb(const vector<int>& tour){
-    std::vector<int> perturbedTour = tour;
-
-    // Randomly swap two edges in the tour
-    std::random_device rd;
-    std::mt19937 gen(rd());
-    std::uniform_int_distribution<size_t> dist(1, perturbedTour.size() - 2);
-    size_t i = dist(gen);
-    size_t j = dist(gen);
-    std::swap(perturbedTour[i], perturbedTour[j]);
-
-    return perturbedTour;
-}
-
-// Function to determine whether to accept a perturbed solution
-bool acceptSolution(double oldCost, double newCost){
-    return newCost < oldCost;
-}
-
-// Function to perform Iterated Local Search for TSP
-vector<int> iteratedLocalSearch(const vector<vector<double>>& distanceMatrix, int iterations) {
-    // Initialize with an initial solution (e.g., Nearest Neighbor)
-    vector<int> bestTour = initialSolution(distanceMatrix);
-    double bestCost = calculateCost(bestTour, distanceMatrix);
-
-    // Main loop
-    for (int iter = 0; iter < iterations; ++iter) {
-        // Perform local search
-        vector<int> newTour = twoOpt(bestTour, distanceMatrix);
-        double newCost = calculateCost(newTour, distanceMatrix);
-
-        // Perturb the solution
-        newTour = perturb(newTour);
-
-        // Accept the perturbed solution based on an acceptance criterion
-        if (acceptSolution(bestCost, newCost)) {
-            bestTour = newTour;
-            bestCost = newCost;
-        }
-    }
-
-    return bestTour;
-}
-
-*/

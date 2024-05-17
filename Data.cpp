@@ -1,32 +1,10 @@
 #include "Graph.h"
 #include "Data.h"
-#include "iostream"
 #include "fstream"
 #include "sstream"
 #include "string"
 
 using namespace std;
-
-void Data::parseGraph(string path) {
-    this->path = path;
-    ifstream in(".." + path);
-    string line;
-    if (path[1] != 'm') {
-        getline(in, line);
-    }
-    while (getline(in, line)) {
-        string orig, dest, dist;
-        istringstream iss(line);
-        getline(iss, orig, ',');
-        getline(iss, dest, ',');
-        getline(iss, dist);
-        g.addVertex(stoi(orig));
-
-        g.addVertex(stoi(dest));
-
-        g.addBidirectionalEdge(stoi(orig), stoi(dest), stod(dist));
-    }
-}
 
 void Data::parseGraph(string path, int size) {
     set<int> temp;
@@ -37,6 +15,7 @@ void Data::parseGraph(string path, int size) {
         getline(in, line);
     }
     g.setSize(size);
+    matrix.resize(size, vector<double>(size, 0.0));
     while (getline(in, line)) {
         string orig, dest, dist;
         istringstream iss(line);
@@ -46,9 +25,9 @@ void Data::parseGraph(string path, int size) {
         g.addVertex(stoi(orig));
         g.addVertex(stoi(dest));
         g.addBidirectionalEdge(stoi(orig), stoi(dest), stod(dist));
+        matrix[stoi(orig)][stoi(dest)] = stod(dist);
+        matrix[stoi(dest)][stoi(orig)] = stod(dist);
     }
-    //g.matrix = matrix;
-
 }
 void Data::parseCoordinates() {
     if (this->path[1] == 'm') {
@@ -93,8 +72,3 @@ Graph<int> Data::getGraph() {
 unordered_map<int,pair<double,double>> Data::getCoordinates() {
     return this->coordinates;
 }
-
-string Data::getPath() {
-    return this->path;
-}
-

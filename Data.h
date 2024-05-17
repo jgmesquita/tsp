@@ -13,20 +13,43 @@
 
 using namespace std;
 
-
+/**
+ * @class Data
+ * @brief This class is used to store all the contents from the .csv files into a graph.
+ * It will be used by the menu class to implement the different proposed algorithms.
+ */
 class Data {
 private:
     Graph<int> g;
     string path;
     unordered_map<int,pair<double,double>> coordinates;
+
 public:
-    void parseGraph(string path);
+    /**
+     * @brief  This is an auxiliary parameter to save all the distances between all the pairs.
+     */
+    std::vector<std::vector<double>> matrix;
+    /**
+     * @brief Constructor for the class Data.
+     * @param path Path for the respective file.
+     * @param size Number of nodes in the graph.
+     */
     void parseGraph(string path, int size);
+    /**
+     * @brief This method will parse the coordinates from the node.csv files.
+     */
     void parseCoordinates();
+    /**
+     * @brief This method will return the a Graph object.
+     * @return Graph object.
+     */
     Graph<int> getGraph();
-    vector<vector<int>> getGraphMatrix();
+    /**
+     * @brief This method will return the coordinates as an unordered_map.
+     * The index represents the id from the node and the value represents the pair of the coordinates.
+     * @return Unordered_map for the coordinates of each node.
+     */
     unordered_map<int,pair<double,double>> getCoordinates();
-    string getPath();
 };
 
 
