@@ -1,0 +1,443 @@
+\doxysection{Menu Class Reference}
+\hypertarget{class_menu}{}\label{class_menu}\index{Menu@{Menu}}
+
+
+Represents the user-\/friendly interface to Routing Algorithm for Ocean Shipping and Urban Deliveries. It shows available functionalities, their corresponding outputs and performance in a clear, organized, and logical manner, facilitating seamless program utilization and straightforward result interpretation.  
+
+
+
+
+{\ttfamily \#include $<$Menu.\+h$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_menu_ad466dd83355124a6ed958430450bfe94}{Menu}} ()
+\begin{DoxyCompactList}\small\item\em 
+\begin{DoxyItemize}
+\item Default \doxylink{class_menu}{Menu} constructor -\/ creates a \doxylink{class_data}{Data} object and parse the csv files 
+\end{DoxyItemize}\end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_menu_ab6c24dec94e1165caad13b2bb687b2ad}{Menu}} (\mbox{\hyperlink{class_edge}{string}} path, \mbox{\hyperlink{class_edge}{int}} \mbox{\hyperlink{class_edge}{size}})
+\begin{DoxyCompactList}\small\item\em 
+\begin{DoxyItemize}
+\item \doxylink{class_menu}{Menu} constructor -\/ creates a \doxylink{class_data}{Data} object and parse the csv files, based on their path and number of nodes of each graph(size) 
+\end{DoxyItemize}\end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_graph}{Graph}}$<$ \mbox{\hyperlink{class_edge}{int}} $>$ \mbox{\hyperlink{class_menu_a8ae62e1a2096d08d23da4557fef84f8c}{get\+Graph\+Menu}} ()
+\begin{DoxyCompactList}\small\item\em This function has the purpose to get the \doxylink{class_graph}{Graph} object from the \doxylink{class_menu}{Menu} object. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_edge}{unordered\+\_\+map}}$<$ \mbox{\hyperlink{class_edge}{int}}, \mbox{\hyperlink{class_edge}{pair}}$<$ \mbox{\hyperlink{class_edge}{double}}, \mbox{\hyperlink{class_edge}{double}} $>$ $>$ \mbox{\hyperlink{class_menu_a934fd6cae18c3a4c2072c90af6c7757b}{get\+Coordinates}} ()
+\begin{DoxyCompactList}\small\item\em This function has the purpose to get the coordinates of the nodes as an unordered\+\_\+map. The temporal complexity is O(1) \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_edge}{double}} \mbox{\hyperlink{class_menu_a62025a00de3f3662142b70f21cdfd405}{tsp\+Backtracking}} (\mbox{\hyperlink{class_graph}{Graph}}$<$ \mbox{\hyperlink{class_edge}{int}} $>$ g)
+\begin{DoxyCompactList}\small\item\em this function performs a backtracking algorithm, in order to find the minimum cost tour of a graph. The temporal complexity is O(V! \texorpdfstring{$\ast$}{*} V). \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_edge}{void}} \mbox{\hyperlink{class_menu_af7cc811b2234509ea0de5f80b86d7a78}{tsp\+Util}} (\mbox{\hyperlink{class_graph}{Graph}}$<$ \mbox{\hyperlink{class_edge}{int}} $>$ g, \mbox{\hyperlink{class_vertex}{Vertex}}$<$ \mbox{\hyperlink{class_edge}{int}} $>$ \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{class_edge}{current}}, \mbox{\hyperlink{class_edge}{vector}}$<$ \mbox{\hyperlink{class_edge}{int}} $>$ \&\mbox{\hyperlink{class_edge}{current\+Route}}, \mbox{\hyperlink{class_edge}{double}} \mbox{\hyperlink{class_edge}{current\+Cost}}, \mbox{\hyperlink{class_edge}{vector}}$<$ \mbox{\hyperlink{class_edge}{int}} $>$ \&\mbox{\hyperlink{class_edge}{best\+Route}}, \mbox{\hyperlink{class_edge}{double}} \&\mbox{\hyperlink{class_edge}{min\+Cost}}, \mbox{\hyperlink{class_edge}{int}} \mbox{\hyperlink{class_edge}{level}})
+\begin{DoxyCompactList}\small\item\em auxiliary function to the backtracking algorithm that is responsible for most of the work by using a dfs search style approach and bounding. The temporal complexity is O(n!) \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_edge}{double}} \mbox{\hyperlink{class_menu_a52be722bbe9d869f93ac174134ee5cf8}{triangle\+Approximation\+TSP}} (\mbox{\hyperlink{class_graph}{Graph}}$<$ \mbox{\hyperlink{class_edge}{int}} $>$ \&g, \mbox{\hyperlink{class_edge}{unordered\+\_\+map}}$<$ \mbox{\hyperlink{class_edge}{int}}, \mbox{\hyperlink{class_edge}{pair}}$<$ \mbox{\hyperlink{class_edge}{double}}, \mbox{\hyperlink{class_edge}{double}} $>$ $>$ \mbox{\hyperlink{class_edge}{c}})
+\begin{DoxyCompactList}\small\item\em This function approximates the solution to the Traveling Salesman Problem (TSP) using a triangle inequality heuristic. It has the temporal complexity of O(\+V\texorpdfstring{$^\wedge$}{\string^}2). This algorithm constructs a Minimum Spanning Tree (MST) of the input graph and then performs a preorder traversal of the MST to create a Hamiltonian circuit. The triangle inequality ensures that the length of the approximated tour is at most twice the length of the optimal tour. If direct distances between vertices are not available, it uses the Haversine formula to compute distances based on geographical coordinates. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_edge}{double}} \mbox{\hyperlink{class_menu_aa1fa547b6b61e524bdc16b546ac66d80}{christofides\+\_\+tsp}} (\mbox{\hyperlink{class_graph}{Graph}}$<$ \mbox{\hyperlink{class_edge}{int}} $>$ g, \mbox{\hyperlink{class_edge}{unordered\+\_\+map}}$<$ \mbox{\hyperlink{class_edge}{int}}, \mbox{\hyperlink{class_edge}{pair}}$<$ \mbox{\hyperlink{class_edge}{double}}, \mbox{\hyperlink{class_edge}{double}} $>$ $>$ \mbox{\hyperlink{class_edge}{c}})
+\begin{DoxyCompactList}\small\item\em This function approximates the solution to the Traveling Salesman Problem (TSP) using Christofides\textquotesingle{} algorithm and improves the solution with a 2-\/opt optimization. It has the temporal complexity of O(\+V\texorpdfstring{$^\wedge$}{\string^}3). \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_edge}{void}} \mbox{\hyperlink{class_menu_ad28dd77536acbbeea5bca4c45b56099b}{minimum\+Weight\+Perfect\+Matching}} (\mbox{\hyperlink{class_edge}{vector}}$<$ \mbox{\hyperlink{class_vertex}{Vertex}}$<$ \mbox{\hyperlink{class_edge}{int}} $>$ \texorpdfstring{$\ast$}{*} $>$ \&\mbox{\hyperlink{class_edge}{odd\+\_\+vertices}})
+\begin{DoxyCompactList}\small\item\em This function finds a minimum weight perfect matching for a set of vertices with odd degree. It has the temporal complexity of O(\+V\texorpdfstring{$^\wedge$}{\string^}3). The function takes a list of vertices with odd degree in the graph and finds a perfect matching where the sum of the weights of the matched edges is minimized. This is an auxiliary function of Christofides\textquotesingle{} algorithm;. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_edge}{vector}}$<$ \mbox{\hyperlink{class_vertex}{Vertex}}$<$ \mbox{\hyperlink{class_edge}{int}} $>$ \texorpdfstring{$\ast$}{*} $>$ \mbox{\hyperlink{class_menu_ad0058589ed7a7e18a067c72f18ee615c}{eulerian\+Circuit}} ()
+\begin{DoxyCompactList}\small\item\em This function has the purpose to construct a vector of the Eularian Circuit. It has the temporal complexity of O(\+VE). \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_edge}{void}} \mbox{\hyperlink{class_menu_ae3f796863a9c1778f5382b95682e75d8}{heirholzer}} (\mbox{\hyperlink{class_vertex}{Vertex}}$<$ \mbox{\hyperlink{class_edge}{int}} $>$ \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{class_edge}{v}}, \mbox{\hyperlink{class_edge}{vector}}$<$ \mbox{\hyperlink{class_vertex}{Vertex}}$<$ \mbox{\hyperlink{class_edge}{int}} $>$ \texorpdfstring{$\ast$}{*} $>$ \&\mbox{\hyperlink{class_edge}{Ecircuit}})
+\begin{DoxyCompactList}\small\item\em This is an auxiliary function for the \doxylink{class_menu_ad0058589ed7a7e18a067c72f18ee615c}{eulerian\+Circuit()}. It has the purpose to visit the edges which are also from the MST. It has the temporal complexity of O(\+VE) \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_edge}{vector}}$<$ \mbox{\hyperlink{class_vertex}{Vertex}}$<$ \mbox{\hyperlink{class_edge}{int}} $>$ \texorpdfstring{$\ast$}{*} $>$ \mbox{\hyperlink{class_menu_a49de2a458af573736812bcc8bdf44b4a}{Convert\+To\+Hamiltonian\+Circuit}} (\mbox{\hyperlink{class_edge}{vector}}$<$ \mbox{\hyperlink{class_vertex}{Vertex}}$<$ \mbox{\hyperlink{class_edge}{int}} $>$ \texorpdfstring{$\ast$}{*} $>$ \&\mbox{\hyperlink{class_edge}{ECircuit}})
+\begin{DoxyCompactList}\small\item\em This function has the purpose to convert a Eularian Circuit into an Halmitonian Circuit. It has the complexity of O(\+V);. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_edge}{double}} \mbox{\hyperlink{class_menu_a7c6b49afcdd05110a3516efadba215f8}{Calculate\+Total\+Cost}} (\mbox{\hyperlink{class_edge}{vector}}$<$ \mbox{\hyperlink{class_vertex}{Vertex}}$<$ \mbox{\hyperlink{class_edge}{int}} $>$ \texorpdfstring{$\ast$}{*} $>$ \mbox{\hyperlink{class_edge}{hamiltonian\+Circuit}}, \mbox{\hyperlink{class_edge}{unordered\+\_\+map}}$<$ \mbox{\hyperlink{class_edge}{int}}, \mbox{\hyperlink{class_edge}{pair}}$<$ \mbox{\hyperlink{class_edge}{double}}, \mbox{\hyperlink{class_edge}{double}} $>$ $>$ \mbox{\hyperlink{class_edge}{c}})
+\begin{DoxyCompactList}\small\item\em This function has the purpose to calculate the cost of the path from the Hamiltonian Circuit. It has the complexity of O(\+V). \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_edge}{double}} \mbox{\hyperlink{class_menu_a62ffbc828e2cc72f42030f8496826075}{haversine}} (\mbox{\hyperlink{class_edge}{double}} \mbox{\hyperlink{class_edge}{lat1}}, \mbox{\hyperlink{class_edge}{double}} \mbox{\hyperlink{class_edge}{lon1}}, \mbox{\hyperlink{class_edge}{double}} \mbox{\hyperlink{class_edge}{lat2}}, \mbox{\hyperlink{class_edge}{double}} \mbox{\hyperlink{class_edge}{lon2}})
+\begin{DoxyCompactList}\small\item\em This function has the purpose to calculate the distance in meters between two nodes. It has a temporal complexity of O(1);. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_edge}{void}} \mbox{\hyperlink{class_menu_a0120e13899d80994b3fcd38d8111d0ed}{prim}} (\mbox{\hyperlink{class_graph}{Graph}}$<$ \mbox{\hyperlink{class_edge}{int}} $>$ \&g)
+\begin{DoxyCompactList}\small\item\em Prim\textquotesingle{}s algorithm has the purpose to find the Minimum Cost Spanning Tree of a graph. It has a temporal complexity of O(\+E\texorpdfstring{$\ast$}{*}log(\+V)). \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_edge}{void}} \mbox{\hyperlink{class_menu_a24b53db47b8f918570f23e102d5eae57}{two\+Opt2}} (std\+::vector$<$ \mbox{\hyperlink{class_vertex}{Vertex}}$<$ \mbox{\hyperlink{class_edge}{int}} $>$ \texorpdfstring{$\ast$}{*} $>$ \&\mbox{\hyperlink{class_edge}{tour}}, \mbox{\hyperlink{class_edge}{unordered\+\_\+map}}$<$ \mbox{\hyperlink{class_edge}{int}}, \mbox{\hyperlink{class_edge}{pair}}$<$ \mbox{\hyperlink{class_edge}{double}}, \mbox{\hyperlink{class_edge}{double}} $>$ $>$ \mbox{\hyperlink{class_edge}{c}})
+\begin{DoxyCompactList}\small\item\em the purpose of this function is to improve the tour obtained by the christofides algorithm, by performing The temporal complexity is O(\+N\texorpdfstring{$^\wedge$}{\string^}2), where N is the number of vertices in the tour the swap of two edges a given number of tries until the there are no more improvements or the number of tries if exceeded \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_edge}{vector}}$<$ \mbox{\hyperlink{class_vertex}{Vertex}}$<$ \mbox{\hyperlink{class_edge}{int}} $>$ \texorpdfstring{$\ast$}{*} $>$ \mbox{\hyperlink{class_menu_a5adf46dee4b8249cafbe45f6492f189c}{pre\+Order\+Walk}} (\mbox{\hyperlink{class_edge}{vector}}$<$ \mbox{\hyperlink{class_vertex}{Vertex}}$<$ \mbox{\hyperlink{class_edge}{int}} $>$ \texorpdfstring{$\ast$}{*} $>$ \mbox{\hyperlink{class_edge}{MST}})
+\begin{DoxyCompactList}\small\item\em This function has the purpose to iterate over the MST vector resulting from the Prim\textquotesingle{}s algorithm. It has a temporal complexity of 0(VE). It can be compared to the DFS algorithm. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_edge}{void}} \mbox{\hyperlink{class_menu_af1d6398a62d463a4e4c41f4e4601de51}{Pre\+Order\+Walk\+DFS}} (\mbox{\hyperlink{class_vertex}{Vertex}}$<$ \mbox{\hyperlink{class_edge}{int}} $>$ \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{class_edge}{node}}, \mbox{\hyperlink{class_edge}{vector}}$<$ \mbox{\hyperlink{class_vertex}{Vertex}}$<$ \mbox{\hyperlink{class_edge}{int}} $>$ \texorpdfstring{$\ast$}{*} $>$ \&\mbox{\hyperlink{class_edge}{result}})
+\begin{DoxyCompactList}\small\item\em This function is auxiliary for the pre\+Order\+Walk. It calls itself recursively until it visits all the possible nodes once. It has a temporal complexity of O(\+E). \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_edge}{Edge}}$<$ \mbox{\hyperlink{class_edge}{int}} $>$ \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{class_menu_af845794f83083fb6b7275c98423d0e25}{find\+Edge}} (\mbox{\hyperlink{class_vertex}{Vertex}}$<$ \mbox{\hyperlink{class_edge}{int}} $>$ \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{class_edge}{from}}, \mbox{\hyperlink{class_vertex}{Vertex}}$<$ \mbox{\hyperlink{class_edge}{int}} $>$ \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{class_edge}{to}})
+\begin{DoxyCompactList}\small\item\em This function has the purpose to find a edge between two nodes. If it doesn\textquotesingle{}t find, it will return nullptr. It has a temporal complexity of O(\+E). \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_edge}{double}} \mbox{\hyperlink{class_menu_aa4fe2cd43987ad142dd8c157fe8c41b5}{greedy\+TSP}} (\mbox{\hyperlink{class_graph}{Graph}}$<$ \mbox{\hyperlink{class_edge}{int}} $>$ g, \mbox{\hyperlink{class_edge}{int}} \mbox{\hyperlink{class_edge}{origin}})
+\begin{DoxyCompactList}\small\item\em This function is a possible implementation for the exercise \doxylink{class_edge_ab976213419283ed754f42f57b195a288}{4.\+4}. This method will start by the chosen origin node. It will choose the best edges by measuring the ratio between the weight and the indegree. It has a temporal complexity of O(\+V\texorpdfstring{$^\wedge$}{\string^}2). \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Represents the user-\/friendly interface to Routing Algorithm for Ocean Shipping and Urban Deliveries. It shows available functionalities, their corresponding outputs and performance in a clear, organized, and logical manner, facilitating seamless program utilization and straightforward result interpretation. 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_menu_ad466dd83355124a6ed958430450bfe94}\label{class_menu_ad466dd83355124a6ed958430450bfe94} 
+\index{Menu@{Menu}!Menu@{Menu}}
+\index{Menu@{Menu}!Menu@{Menu}}
+\doxysubsubsection{\texorpdfstring{Menu()}{Menu()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily Menu\+::\+Menu (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+
+\begin{DoxyItemize}
+\item Default \doxylink{class_menu}{Menu} constructor -\/ creates a \doxylink{class_data}{Data} object and parse the csv files 
+\end{DoxyItemize}
+
+\Hypertarget{class_menu_ab6c24dec94e1165caad13b2bb687b2ad}\label{class_menu_ab6c24dec94e1165caad13b2bb687b2ad} 
+\index{Menu@{Menu}!Menu@{Menu}}
+\index{Menu@{Menu}!Menu@{Menu}}
+\doxysubsubsection{\texorpdfstring{Menu()}{Menu()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily Menu\+::\+Menu (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_edge}{string}}}]{path,  }\item[{\mbox{\hyperlink{class_edge}{int}}}]{size }\end{DoxyParamCaption})}
+
+
+
+
+\begin{DoxyItemize}
+\item \doxylink{class_menu}{Menu} constructor -\/ creates a \doxylink{class_data}{Data} object and parse the csv files, based on their path and number of nodes of each graph(size) 
+\end{DoxyItemize}
+
+
+\begin{DoxyParams}{Parameters}
+{\em path} & of each csv file to parse \\
+\hline
+{\em size} & number o nodes of each graph \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_menu_a7c6b49afcdd05110a3516efadba215f8}\label{class_menu_a7c6b49afcdd05110a3516efadba215f8} 
+\index{Menu@{Menu}!CalculateTotalCost@{CalculateTotalCost}}
+\index{CalculateTotalCost@{CalculateTotalCost}!Menu@{Menu}}
+\doxysubsubsection{\texorpdfstring{CalculateTotalCost()}{CalculateTotalCost()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_edge}{double}} Menu\+::\+Calculate\+Total\+Cost (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_edge}{vector}}$<$ \mbox{\hyperlink{class_vertex}{Vertex}}$<$ \mbox{\hyperlink{class_edge}{int}} $>$ \texorpdfstring{$\ast$}{*} $>$}]{hamiltonian\+Circuit,  }\item[{\mbox{\hyperlink{class_edge}{unordered\+\_\+map}}$<$ \mbox{\hyperlink{class_edge}{int}}, \mbox{\hyperlink{class_edge}{pair}}$<$ \mbox{\hyperlink{class_edge}{double}}, \mbox{\hyperlink{class_edge}{double}} $>$ $>$}]{c }\end{DoxyParamCaption})}
+
+
+
+This function has the purpose to calculate the cost of the path from the Hamiltonian Circuit. It has the complexity of O(\+V). 
+
+
+\begin{DoxyParams}{Parameters}
+{\em hamiltonian\+Circuit} & Vector with the Hamiltonian Circuit. \\
+\hline
+{\em c} & Unordered\+\_\+map with the coordinates of the nodes. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+It returns the cost of the whole path. 
+\end{DoxyReturn}
+\Hypertarget{class_menu_aa1fa547b6b61e524bdc16b546ac66d80}\label{class_menu_aa1fa547b6b61e524bdc16b546ac66d80} 
+\index{Menu@{Menu}!christofides\_tsp@{christofides\_tsp}}
+\index{christofides\_tsp@{christofides\_tsp}!Menu@{Menu}}
+\doxysubsubsection{\texorpdfstring{christofides\_tsp()}{christofides\_tsp()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_edge}{double}} Menu\+::christofides\+\_\+tsp (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_graph}{Graph}}$<$ \mbox{\hyperlink{class_edge}{int}} $>$}]{g,  }\item[{\mbox{\hyperlink{class_edge}{unordered\+\_\+map}}$<$ \mbox{\hyperlink{class_edge}{int}}, \mbox{\hyperlink{class_edge}{pair}}$<$ \mbox{\hyperlink{class_edge}{double}}, \mbox{\hyperlink{class_edge}{double}} $>$ $>$}]{c }\end{DoxyParamCaption})}
+
+
+
+This function approximates the solution to the Traveling Salesman Problem (TSP) using Christofides\textquotesingle{} algorithm and improves the solution with a 2-\/opt optimization. It has the temporal complexity of O(\+V\texorpdfstring{$^\wedge$}{\string^}3). 
+
+Christofides\textquotesingle{} algorithm is a well-\/known approximation algorithm for the TSP that guarantees a tour length within \doxylink{class_edge_ab976213419283ed754f42f57b195a288}{1.\+5} times the optimal solution. The algorithm consists of the following steps\+:
+\begin{DoxyEnumerate}
+\item Compute a Minimum Spanning Tree (MST) of the graph.
+\item Find a minimum weight perfect matching for the vertices with odd degree in the MST.
+\item Combine the edges of the MST and the perfect matching to form an Eulerian graph.
+\item Find an Eulerian tour in the Eulerian graph.
+\item Convert the Eulerian tour to a Hamiltonian circuit by shortcutting repeated vertices.
+\item Apply 2-\/opt optimization to the Hamiltonian circuit to further improve the tour by swapping pairs of edges to reduce the tour length. If direct distances between vertices are not available, the function uses the Haversine formula to compute distances based on geographical coordinates.
+\end{DoxyEnumerate}
+
+
+\begin{DoxyParams}{Parameters}
+{\em g} & graph that contain all the information about the problem in question \\
+\hline
+{\em c} & Unordered\+\_\+map with the coordinates of the nodes. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the minimum cost of the tour started at a specific node(origin node). 
+\end{DoxyReturn}
+\Hypertarget{class_menu_a49de2a458af573736812bcc8bdf44b4a}\label{class_menu_a49de2a458af573736812bcc8bdf44b4a} 
+\index{Menu@{Menu}!ConvertToHamiltonianCircuit@{ConvertToHamiltonianCircuit}}
+\index{ConvertToHamiltonianCircuit@{ConvertToHamiltonianCircuit}!Menu@{Menu}}
+\doxysubsubsection{\texorpdfstring{ConvertToHamiltonianCircuit()}{ConvertToHamiltonianCircuit()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_edge}{vector}}$<$ \mbox{\hyperlink{class_vertex}{Vertex}}$<$ \mbox{\hyperlink{class_edge}{int}} $>$ \texorpdfstring{$\ast$}{*} $>$ Menu\+::\+Convert\+To\+Hamiltonian\+Circuit (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_edge}{vector}}$<$ \mbox{\hyperlink{class_vertex}{Vertex}}$<$ \mbox{\hyperlink{class_edge}{int}} $>$ \texorpdfstring{$\ast$}{*} $>$ \&}]{ECircuit }\end{DoxyParamCaption})}
+
+
+
+This function has the purpose to convert a Eularian Circuit into an Halmitonian Circuit. It has the complexity of O(\+V);. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ECircuit} & Eularian Circuit as a vector. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Halmitonian Circuit as a vector. 
+\end{DoxyReturn}
+\Hypertarget{class_menu_ad0058589ed7a7e18a067c72f18ee615c}\label{class_menu_ad0058589ed7a7e18a067c72f18ee615c} 
+\index{Menu@{Menu}!eulerianCircuit@{eulerianCircuit}}
+\index{eulerianCircuit@{eulerianCircuit}!Menu@{Menu}}
+\doxysubsubsection{\texorpdfstring{eulerianCircuit()}{eulerianCircuit()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_edge}{vector}}$<$ \mbox{\hyperlink{class_vertex}{Vertex}}$<$ \mbox{\hyperlink{class_edge}{int}} $>$ \texorpdfstring{$\ast$}{*} $>$ Menu\+::eulerian\+Circuit (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+This function has the purpose to construct a vector of the Eularian Circuit. It has the temporal complexity of O(\+VE). 
+
+\begin{DoxyReturn}{Returns}
+Eularian Circuit as a vector. 
+\end{DoxyReturn}
+\Hypertarget{class_menu_af845794f83083fb6b7275c98423d0e25}\label{class_menu_af845794f83083fb6b7275c98423d0e25} 
+\index{Menu@{Menu}!findEdge@{findEdge}}
+\index{findEdge@{findEdge}!Menu@{Menu}}
+\doxysubsubsection{\texorpdfstring{findEdge()}{findEdge()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_edge}{Edge}}$<$ \mbox{\hyperlink{class_edge}{int}} $>$ \texorpdfstring{$\ast$}{*} Menu\+::find\+Edge (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_vertex}{Vertex}}$<$ \mbox{\hyperlink{class_edge}{int}} $>$ \texorpdfstring{$\ast$}{*}}]{from,  }\item[{\mbox{\hyperlink{class_vertex}{Vertex}}$<$ \mbox{\hyperlink{class_edge}{int}} $>$ \texorpdfstring{$\ast$}{*}}]{to }\end{DoxyParamCaption})}
+
+
+
+This function has the purpose to find a edge between two nodes. If it doesn\textquotesingle{}t find, it will return nullptr. It has a temporal complexity of O(\+E). 
+
+
+\begin{DoxyParams}{Parameters}
+{\em from} & Origin node. \\
+\hline
+{\em to} & Destination node. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\doxylink{class_edge}{Edge} between the origin and the destination. 
+\end{DoxyReturn}
+\Hypertarget{class_menu_a934fd6cae18c3a4c2072c90af6c7757b}\label{class_menu_a934fd6cae18c3a4c2072c90af6c7757b} 
+\index{Menu@{Menu}!getCoordinates@{getCoordinates}}
+\index{getCoordinates@{getCoordinates}!Menu@{Menu}}
+\doxysubsubsection{\texorpdfstring{getCoordinates()}{getCoordinates()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_edge}{unordered\+\_\+map}}$<$ \mbox{\hyperlink{class_edge}{int}}, \mbox{\hyperlink{class_edge}{pair}}$<$ \mbox{\hyperlink{class_edge}{double}}, \mbox{\hyperlink{class_edge}{double}} $>$ $>$ Menu\+::get\+Coordinates (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+This function has the purpose to get the coordinates of the nodes as an unordered\+\_\+map. The temporal complexity is O(1) 
+
+\begin{DoxyReturn}{Returns}
+Unordered\+\_\+map of the nodes\textquotesingle{} coordinates. 
+\end{DoxyReturn}
+\Hypertarget{class_menu_a8ae62e1a2096d08d23da4557fef84f8c}\label{class_menu_a8ae62e1a2096d08d23da4557fef84f8c} 
+\index{Menu@{Menu}!getGraphMenu@{getGraphMenu}}
+\index{getGraphMenu@{getGraphMenu}!Menu@{Menu}}
+\doxysubsubsection{\texorpdfstring{getGraphMenu()}{getGraphMenu()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_graph}{Graph}}$<$ \mbox{\hyperlink{class_edge}{int}} $>$ Menu\+::get\+Graph\+Menu (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+This function has the purpose to get the \doxylink{class_graph}{Graph} object from the \doxylink{class_menu}{Menu} object. 
+
+\begin{DoxyReturn}{Returns}
+\doxylink{class_graph}{Graph} object. 
+\end{DoxyReturn}
+\Hypertarget{class_menu_aa4fe2cd43987ad142dd8c157fe8c41b5}\label{class_menu_aa4fe2cd43987ad142dd8c157fe8c41b5} 
+\index{Menu@{Menu}!greedyTSP@{greedyTSP}}
+\index{greedyTSP@{greedyTSP}!Menu@{Menu}}
+\doxysubsubsection{\texorpdfstring{greedyTSP()}{greedyTSP()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_edge}{double}} Menu\+::greedy\+TSP (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_graph}{Graph}}$<$ \mbox{\hyperlink{class_edge}{int}} $>$}]{g,  }\item[{\mbox{\hyperlink{class_edge}{int}}}]{origin }\end{DoxyParamCaption})}
+
+
+
+This function is a possible implementation for the exercise \doxylink{class_edge_ab976213419283ed754f42f57b195a288}{4.\+4}. This method will start by the chosen origin node. It will choose the best edges by measuring the ratio between the weight and the indegree. It has a temporal complexity of O(\+V\texorpdfstring{$^\wedge$}{\string^}2). 
+
+
+\begin{DoxyParams}{Parameters}
+{\em g} & \doxylink{class_graph}{Graph} to apply the algorithm. \\
+\hline
+{\em origin} & Starting node for the algorithm. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+It will return the cost if there is a path or it will abort the program if it can\textquotesingle{}t find a path. 
+\end{DoxyReturn}
+\Hypertarget{class_menu_a62ffbc828e2cc72f42030f8496826075}\label{class_menu_a62ffbc828e2cc72f42030f8496826075} 
+\index{Menu@{Menu}!haversine@{haversine}}
+\index{haversine@{haversine}!Menu@{Menu}}
+\doxysubsubsection{\texorpdfstring{haversine()}{haversine()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_edge}{double}} Menu\+::haversine (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_edge}{double}}}]{lat1,  }\item[{\mbox{\hyperlink{class_edge}{double}}}]{lon1,  }\item[{\mbox{\hyperlink{class_edge}{double}}}]{lat2,  }\item[{\mbox{\hyperlink{class_edge}{double}}}]{lon2 }\end{DoxyParamCaption})}
+
+
+
+This function has the purpose to calculate the distance in meters between two nodes. It has a temporal complexity of O(1);. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em lat1} & Latitude of the first node. \\
+\hline
+{\em lon1} & Longitude of the first node. \\
+\hline
+{\em lat2} & Latitude of the second node. \\
+\hline
+{\em lon2} & Longitude of the second node. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Distance between the two nodes in meters. 
+\end{DoxyReturn}
+\Hypertarget{class_menu_ae3f796863a9c1778f5382b95682e75d8}\label{class_menu_ae3f796863a9c1778f5382b95682e75d8} 
+\index{Menu@{Menu}!heirholzer@{heirholzer}}
+\index{heirholzer@{heirholzer}!Menu@{Menu}}
+\doxysubsubsection{\texorpdfstring{heirholzer()}{heirholzer()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_edge}{void}} Menu\+::heirholzer (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_vertex}{Vertex}}$<$ \mbox{\hyperlink{class_edge}{int}} $>$ \texorpdfstring{$\ast$}{*}}]{v,  }\item[{\mbox{\hyperlink{class_edge}{vector}}$<$ \mbox{\hyperlink{class_vertex}{Vertex}}$<$ \mbox{\hyperlink{class_edge}{int}} $>$ \texorpdfstring{$\ast$}{*} $>$ \&}]{Ecircuit }\end{DoxyParamCaption})}
+
+
+
+This is an auxiliary function for the \doxylink{class_menu_ad0058589ed7a7e18a067c72f18ee615c}{eulerian\+Circuit()}. It has the purpose to visit the edges which are also from the MST. It has the temporal complexity of O(\+VE) 
+
+
+\begin{DoxyParams}{Parameters}
+{\em v} & Current node. \\
+\hline
+{\em Ecircuit} & Vector with the Eulerian Circuit. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_menu_ad28dd77536acbbeea5bca4c45b56099b}\label{class_menu_ad28dd77536acbbeea5bca4c45b56099b} 
+\index{Menu@{Menu}!minimumWeightPerfectMatching@{minimumWeightPerfectMatching}}
+\index{minimumWeightPerfectMatching@{minimumWeightPerfectMatching}!Menu@{Menu}}
+\doxysubsubsection{\texorpdfstring{minimumWeightPerfectMatching()}{minimumWeightPerfectMatching()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_edge}{void}} Menu\+::minimum\+Weight\+Perfect\+Matching (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_edge}{vector}}$<$ \mbox{\hyperlink{class_vertex}{Vertex}}$<$ \mbox{\hyperlink{class_edge}{int}} $>$ \texorpdfstring{$\ast$}{*} $>$ \&}]{odd\+\_\+vertices }\end{DoxyParamCaption})}
+
+
+
+This function finds a minimum weight perfect matching for a set of vertices with odd degree. It has the temporal complexity of O(\+V\texorpdfstring{$^\wedge$}{\string^}3). The function takes a list of vertices with odd degree in the graph and finds a perfect matching where the sum of the weights of the matched edges is minimized. This is an auxiliary function of Christofides\textquotesingle{} algorithm;. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em odd\+\_\+vertices} & A vector of pointers to vertices with odd degree in the graph. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_menu_a5adf46dee4b8249cafbe45f6492f189c}\label{class_menu_a5adf46dee4b8249cafbe45f6492f189c} 
+\index{Menu@{Menu}!preOrderWalk@{preOrderWalk}}
+\index{preOrderWalk@{preOrderWalk}!Menu@{Menu}}
+\doxysubsubsection{\texorpdfstring{preOrderWalk()}{preOrderWalk()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_edge}{vector}}$<$ \mbox{\hyperlink{class_vertex}{Vertex}}$<$ \mbox{\hyperlink{class_edge}{int}} $>$ \texorpdfstring{$\ast$}{*} $>$ Menu\+::pre\+Order\+Walk (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_edge}{vector}}$<$ \mbox{\hyperlink{class_vertex}{Vertex}}$<$ \mbox{\hyperlink{class_edge}{int}} $>$ \texorpdfstring{$\ast$}{*} $>$}]{MST }\end{DoxyParamCaption})}
+
+
+
+This function has the purpose to iterate over the MST vector resulting from the Prim\textquotesingle{}s algorithm. It has a temporal complexity of 0(VE). It can be compared to the DFS algorithm. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em MST} & Vector which has the vertexs from the Prim\textquotesingle{}s algorithm. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Pre-\/order walk as a vector. 
+\end{DoxyReturn}
+\Hypertarget{class_menu_af1d6398a62d463a4e4c41f4e4601de51}\label{class_menu_af1d6398a62d463a4e4c41f4e4601de51} 
+\index{Menu@{Menu}!PreOrderWalkDFS@{PreOrderWalkDFS}}
+\index{PreOrderWalkDFS@{PreOrderWalkDFS}!Menu@{Menu}}
+\doxysubsubsection{\texorpdfstring{PreOrderWalkDFS()}{PreOrderWalkDFS()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_edge}{void}} Menu\+::\+Pre\+Order\+Walk\+DFS (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_vertex}{Vertex}}$<$ \mbox{\hyperlink{class_edge}{int}} $>$ \texorpdfstring{$\ast$}{*}}]{node,  }\item[{\mbox{\hyperlink{class_edge}{vector}}$<$ \mbox{\hyperlink{class_vertex}{Vertex}}$<$ \mbox{\hyperlink{class_edge}{int}} $>$ \texorpdfstring{$\ast$}{*} $>$ \&}]{result }\end{DoxyParamCaption})}
+
+
+
+This function is auxiliary for the pre\+Order\+Walk. It calls itself recursively until it visits all the possible nodes once. It has a temporal complexity of O(\+E). 
+
+
+\begin{DoxyParams}{Parameters}
+{\em node} & \\
+\hline
+{\em result} & \\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_menu_a0120e13899d80994b3fcd38d8111d0ed}\label{class_menu_a0120e13899d80994b3fcd38d8111d0ed} 
+\index{Menu@{Menu}!prim@{prim}}
+\index{prim@{prim}!Menu@{Menu}}
+\doxysubsubsection{\texorpdfstring{prim()}{prim()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_edge}{void}} Menu\+::prim (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_graph}{Graph}}$<$ \mbox{\hyperlink{class_edge}{int}} $>$ \&}]{g }\end{DoxyParamCaption})}
+
+
+
+Prim\textquotesingle{}s algorithm has the purpose to find the Minimum Cost Spanning Tree of a graph. It has a temporal complexity of O(\+E\texorpdfstring{$\ast$}{*}log(\+V)). 
+
+
+\begin{DoxyParams}{Parameters}
+{\em g} & \doxylink{class_graph}{Graph} to apply the Prim\textquotesingle{}s algorithm. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_menu_a52be722bbe9d869f93ac174134ee5cf8}\label{class_menu_a52be722bbe9d869f93ac174134ee5cf8} 
+\index{Menu@{Menu}!triangleApproximationTSP@{triangleApproximationTSP}}
+\index{triangleApproximationTSP@{triangleApproximationTSP}!Menu@{Menu}}
+\doxysubsubsection{\texorpdfstring{triangleApproximationTSP()}{triangleApproximationTSP()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_edge}{double}} Menu\+::triangle\+Approximation\+TSP (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_graph}{Graph}}$<$ \mbox{\hyperlink{class_edge}{int}} $>$ \&}]{g,  }\item[{\mbox{\hyperlink{class_edge}{unordered\+\_\+map}}$<$ \mbox{\hyperlink{class_edge}{int}}, \mbox{\hyperlink{class_edge}{pair}}$<$ \mbox{\hyperlink{class_edge}{double}}, \mbox{\hyperlink{class_edge}{double}} $>$ $>$}]{c }\end{DoxyParamCaption})}
+
+
+
+This function approximates the solution to the Traveling Salesman Problem (TSP) using a triangle inequality heuristic. It has the temporal complexity of O(\+V\texorpdfstring{$^\wedge$}{\string^}2). This algorithm constructs a Minimum Spanning Tree (MST) of the input graph and then performs a preorder traversal of the MST to create a Hamiltonian circuit. The triangle inequality ensures that the length of the approximated tour is at most twice the length of the optimal tour. If direct distances between vertices are not available, it uses the Haversine formula to compute distances based on geographical coordinates. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em g} & graph that contain all the information about the problem in question \\
+\hline
+{\em c} & Unordered\+\_\+map with the coordinates of the nodes. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the minimum cost of the tour started at a specific node(origin node). 
+\end{DoxyReturn}
+\Hypertarget{class_menu_a62025a00de3f3662142b70f21cdfd405}\label{class_menu_a62025a00de3f3662142b70f21cdfd405} 
+\index{Menu@{Menu}!tspBacktracking@{tspBacktracking}}
+\index{tspBacktracking@{tspBacktracking}!Menu@{Menu}}
+\doxysubsubsection{\texorpdfstring{tspBacktracking()}{tspBacktracking()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_edge}{double}} Menu\+::tsp\+Backtracking (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_graph}{Graph}}$<$ \mbox{\hyperlink{class_edge}{int}} $>$}]{g }\end{DoxyParamCaption})}
+
+
+
+this function performs a backtracking algorithm, in order to find the minimum cost tour of a graph. The temporal complexity is O(V! \texorpdfstring{$\ast$}{*} V). 
+
+
+\begin{DoxyParams}{Parameters}
+{\em g} & graph that contain all the information about the problem in question \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the minimum cost of the tour started at a specific node(origin node) 
+\end{DoxyReturn}
+\Hypertarget{class_menu_af7cc811b2234509ea0de5f80b86d7a78}\label{class_menu_af7cc811b2234509ea0de5f80b86d7a78} 
+\index{Menu@{Menu}!tspUtil@{tspUtil}}
+\index{tspUtil@{tspUtil}!Menu@{Menu}}
+\doxysubsubsection{\texorpdfstring{tspUtil()}{tspUtil()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_edge}{void}} Menu\+::tsp\+Util (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_graph}{Graph}}$<$ \mbox{\hyperlink{class_edge}{int}} $>$}]{g,  }\item[{\mbox{\hyperlink{class_vertex}{Vertex}}$<$ \mbox{\hyperlink{class_edge}{int}} $>$ \texorpdfstring{$\ast$}{*}}]{current,  }\item[{\mbox{\hyperlink{class_edge}{vector}}$<$ \mbox{\hyperlink{class_edge}{int}} $>$ \&}]{current\+Route,  }\item[{\mbox{\hyperlink{class_edge}{double}}}]{current\+Cost,  }\item[{\mbox{\hyperlink{class_edge}{vector}}$<$ \mbox{\hyperlink{class_edge}{int}} $>$ \&}]{best\+Route,  }\item[{\mbox{\hyperlink{class_edge}{double}} \&}]{min\+Cost,  }\item[{\mbox{\hyperlink{class_edge}{int}}}]{level }\end{DoxyParamCaption})}
+
+
+
+auxiliary function to the backtracking algorithm that is responsible for most of the work by using a dfs search style approach and bounding. The temporal complexity is O(n!) 
+
+
+\begin{DoxyParams}{Parameters}
+{\em g} & graph that contain all the information about the problem in question \\
+\hline
+{\em current} & is the current node that is being visited \\
+\hline
+{\em current\+Route} & the current route \\
+\hline
+{\em current\+Cost} & the cost of the current route \\
+\hline
+{\em best\+Route} & the route that will yield the overall minimum cost \\
+\hline
+{\em min\+Cost} & is the cost of the route with the minimum cost \\
+\hline
+{\em level} & the level od depth of the backtracking tree \\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_menu_a24b53db47b8f918570f23e102d5eae57}\label{class_menu_a24b53db47b8f918570f23e102d5eae57} 
+\index{Menu@{Menu}!twoOpt2@{twoOpt2}}
+\index{twoOpt2@{twoOpt2}!Menu@{Menu}}
+\doxysubsubsection{\texorpdfstring{twoOpt2()}{twoOpt2()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_edge}{void}} Menu\+::two\+Opt2 (\begin{DoxyParamCaption}\item[{std\+::vector$<$ \mbox{\hyperlink{class_vertex}{Vertex}}$<$ \mbox{\hyperlink{class_edge}{int}} $>$ \texorpdfstring{$\ast$}{*} $>$ \&}]{tour,  }\item[{\mbox{\hyperlink{class_edge}{unordered\+\_\+map}}$<$ \mbox{\hyperlink{class_edge}{int}}, \mbox{\hyperlink{class_edge}{pair}}$<$ \mbox{\hyperlink{class_edge}{double}}, \mbox{\hyperlink{class_edge}{double}} $>$ $>$}]{c }\end{DoxyParamCaption})}
+
+
+
+the purpose of this function is to improve the tour obtained by the christofides algorithm, by performing The temporal complexity is O(\+N\texorpdfstring{$^\wedge$}{\string^}2), where N is the number of vertices in the tour the swap of two edges a given number of tries until the there are no more improvements or the number of tries if exceeded 
+
+
+\begin{DoxyParams}{Parameters}
+{\em tour} & represent the initial tour obtain by the christofides algorithm that will be improved \\
+\hline
+{\em c} & Unordered\+\_\+map with the coordinates of the nodes. \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{_menu_8h}{Menu.\+h}}\item 
+\mbox{\hyperlink{_menu_8cpp}{Menu.\+cpp}}\end{DoxyCompactItemize}

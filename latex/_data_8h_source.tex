@@ -1,0 +1,36 @@
+\doxysection{Data.\+h}
+\hypertarget{_data_8h_source}{}\label{_data_8h_source}\mbox{\hyperlink{_data_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{comment}{//}}
+\DoxyCodeLine{00002\ \textcolor{comment}{//\ Created\ by\ jorge\ on\ 25/04/2024.}}
+\DoxyCodeLine{00003\ \textcolor{comment}{//}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#ifndef\ PROJETO\_2\_DA\_DATA\_H}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#define\ PROJETO\_2\_DA\_DATA\_H}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{_graph_8h}{Graph.h}}"{}}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ "{}string"{}}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ "{}unordered\_map"{}}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ "{}map"{}}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ "{}set"{}}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{keyword}{using\ namespace\ }std;}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00021\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_data}{Data}}\ \{}
+\DoxyCodeLine{00022\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00023\ \ \ \ \ \mbox{\hyperlink{class_graph}{Graph<int>}}\ g;}
+\DoxyCodeLine{00024\ \ \ \ \ \textcolor{keywordtype}{string}\ path;}
+\DoxyCodeLine{00025\ \ \ \ \ unordered\_map<int,pair<double,double>>\ coordinates;}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00031\ \ \ \ \ std::vector<std::vector<double>>\ \mbox{\hyperlink{class_data_a0b652931b9be6f649f075ae7fd123e81}{matrix}};}
+\DoxyCodeLine{00038\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_data_a3ac73201340d0ac00cd29ad0bbc949e5}{parseGraph}}(\textcolor{keywordtype}{string}\ path,\ \textcolor{keywordtype}{int}\ size);}
+\DoxyCodeLine{00043\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_data_a690fe94e42ad5d9f458b1760a3ef02fe}{parseCoordinates}}();}
+\DoxyCodeLine{00049\ \ \ \ \ \mbox{\hyperlink{class_graph}{Graph<int>}}\ \mbox{\hyperlink{class_data_ac4d5f612d24eb0c6309f67ec92204fb5}{getGraph}}();}
+\DoxyCodeLine{00056\ \ \ \ \ unordered\_map<int,pair<double,double>>\ \mbox{\hyperlink{class_data_a44f19506d235f8481f3a53185ee204e9}{getCoordinates}}();}
+\DoxyCodeLine{00057\ \};}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ }
+\DoxyCodeLine{00060\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//PROJETO\_2\_DA\_DATA\_H}}
+
+\end{DoxyCode}
