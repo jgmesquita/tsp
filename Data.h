@@ -31,21 +31,25 @@ public:
     std::vector<std::vector<double>> matrix;
     /**
      * @brief Constructor for the class Data.
+     * It has the temporal complexity of O(N^2 + E), where E is the number of lines in the csv files
      * @param path Path for the respective file.
      * @param size Number of nodes in the graph.
      */
     void parseGraph(string path, int size);
     /**
      * @brief This method will parse the coordinates from the node.csv files.
+     * It has the temporal complexity of O(N * log N), where E is the number of lines in the csv files
      */
     void parseCoordinates();
     /**
      * @brief This method will return the a Graph object.
+     * It has the temporal complexity of O(1).
      * @return Graph object.
      */
     Graph<int> getGraph();
     /**
      * @brief This method will return the coordinates as an unordered_map.
+      * It has the temporal complexity of O(1).
      * The index represents the id from the node and the value represents the pair of the coordinates.
      * @return Unordered_map for the coordinates of each node.
      */

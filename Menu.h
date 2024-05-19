@@ -39,17 +39,20 @@ public:
     Graph<int> getGraphMenu();
     /**
      * @brief This function has the purpose to get the coordinates of the nodes as an unordered_map.
+     * The temporal complexity is O(1)
      * @return Unordered_map of the nodes' coordinates.
      */
     unordered_map<int,pair<double,double>> getCoordinates();
     /**
-     * @brief this function performs a backtracking algorithm, in order to find the minimum cost tour of a graph
+     * @brief this function performs a backtracking algorithm, in order to find the minimum cost tour of a graph.
+     * The temporal complexity is O(V! * V).
      * @param g graph that contain all the information about the problem in question
      * @return the minimum cost of the tour started at a specific node(origin node)
      */
     double tspBacktracking(Graph<int> g);
     /**
-     * @brief auxiliary function to the backtracking algorithm that is responsible for most of the work by using a dfs search style approach and bounding
+     * @brief auxiliary function to the backtracking algorithm that is responsible for most of the work by using a dfs search style approach and bounding.
+     * The temporal complexity is O(n!)
      * @param g graph that contain all the information about the problem in question
      * @param current is the current node that is being visited
      * @param currentRoute the current route
@@ -149,6 +152,7 @@ public:
     void prim(Graph<int>& g);
     /**
      * @brief the purpose of this function is to improve the tour obtained by the christofides algorithm, by performing
+     * The temporal complexity is O(N^2), where N is the number of vertices in the tour
      * the swap of two edges a given number of tries until the there are no more improvements or the number of tries if exceeded
      * @param tour represent the initial tour obtain by the christofides algorithm that will be improved
      * @param c Unordered_map with the coordinates of the nodes.

@@ -4,9 +4,6 @@
 
 using namespace std;
 
-/**
- *
- */
 Menu::Menu() {
     this->d = Data();
 }
@@ -322,9 +319,9 @@ void Menu::twoOpt2(std::vector<Vertex<int>*>& tour, unordered_map<int,pair<doubl
     Vertex<int>* vertexB;
     Vertex<int>* vertexC;
     Vertex<int>* vertexD;
-    int n = 3; //numbers of tries to improve the tour
+    int triesToImprove = 3; //numbers of tries to improve the tour
 
-    while (improved && (n > 0)) {
+    while (improved && (triesToImprove > 0)) {
         improved = false;
 
         for (int i = 0; i < tour.size() - 2; i++) {
@@ -375,7 +372,7 @@ void Menu::twoOpt2(std::vector<Vertex<int>*>& tour, unordered_map<int,pair<doubl
                 }
             }
         }
-        n--;
+        triesToImprove--;
 
     }
 }
